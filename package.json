@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "prisma migrate deploy && next build"
+    "build": "prisma migrate deploy && next build",
     "start": "next start",
     "postinstall": "prisma generate"
   },
