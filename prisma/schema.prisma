@@ -1,0 +1,68 @@
+// ═══════════════════════════════════════════════
+// Prisma Schema — 建築學習筆記部落格
+// generator: prisma-client（Prisma 7 Rust-free）
+// output:    ./generated/prisma（不在 node_modules）
+// ═══════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+// datasource 只寫 provider，url 在 prisma.config.ts 設定
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── 管理員 ───
+model AdminUser {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String    // bcrypt hash, 12 rounds
+  createdAt DateTime  @default(now())
+  sessions  Session[]
+}
+
+// ─── 文章 ───
+model Post {
+  id         Int       @id @default(autoincrement())
+  title      String
+  slug       String    @unique
+  excerpt    String    // 摘要，用於首頁卡片
+  content    String    // Markdown 原文
+  coverImage String?   // Cloudinary URL（nullable）
+  published  Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  categoryId Int
+  category   Category  @relation(fields: [categoryId], references: [id])
+  tags       Tag[]     // 隱式多對多（Prisma 自動建 _PostToTag 中間表）
+}
+
+// ─── 分類 ───
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+}
+
+// ─── 標籤 ───
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
+  posts Post[] // 隱式多對多
+}
+
+// ─── Session ───
+// MVP 決策：token 存原始值，不 hash
+// OPEN_ASSUMPTIONS: 多管理者時升級為 hash 儲存
+model Session {
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  expiresAt   DateTime
+  adminUserId Int
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id])
+}

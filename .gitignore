@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# env（.env.example 需提交版控）
+.env
+.env.local
+.env.*.local
+
+# prisma generated（由 postinstall 自動產生）
+prisma/generated/
+
+# misc
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
