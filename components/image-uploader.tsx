@@ -1,135 +1,113 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Image from "next/image";
 
-/**
- * 圖片上傳器 — Cloudinary direct upload
- *
- * ⚠️ app-layer validation:
- *   - MIME 類型：image/* 
- *   - 檔案大小：≤ 5MB
- *   Cloudinary 自身有獨立限制
- */
 type ImageUploaderProps = {
-  value: string; // 目前的圖片 URL
+  value: string;
   onChange: (url: string) => void;
 };
 
 export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [mode, setMode] = useState<"upload" | "url">("upload");
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    setError(""); setUploading(true);
 
-    setError("");
+    const form = new FormData();
+    form.append("file", file);
 
-    // ⚠️ app-layer validation: MIME 檢查
-    if (!file.type.startsWith("image/")) {
-      setError("請選擇圖片檔案");
-      return;
+    const res = await fetch("/api/upload", { method: "POST", body: form });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.error || "上傳失敗");
+    } else {
+      onChange(data.url);
     }
-
-    // ⚠️ app-layer validation: 5MB 限制
-    if (file.size > 5 * 1024 * 1024) {
-      setError("檔案大小不可超過 5MB");
-      return;
-    }
-
-    setUploading(true);
-
-    try {
-      // 1. 取得簽章
-      const signRes = await fetch("/api/upload/sign", { method: "POST" });
-      const signData = await signRes.json();
-
-      if (!signRes.ok) {
-        setError(signData.error || "取得簽章失敗");
-        setUploading(false);
-        return;
-      }
-
-      const { signature, timestamp, cloudName, apiKey, folder } = signData.data;
-
-      // 2. 直接上傳到 Cloudinary
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("signature", signature);
-      formData.append("timestamp", String(timestamp));
-      formData.append("api_key", apiKey);
-      formData.append("folder", folder);
-      formData.append("overwrite", "false");
-      formData.append("resource_type", "image");
-
-      const uploadRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        { method: "POST", body: formData }
-      );
-
-      const uploadData = await uploadRes.json();
-
-      if (!uploadRes.ok) {
-        setError(uploadData.error?.message || "上傳失敗");
-        setUploading(false);
-        return;
-      }
-
-      // 3. 回傳 secure_url
-      onChange(uploadData.secure_url);
-    } catch {
-      setError("上傳時發生錯誤");
-    }
-
     setUploading(false);
+    if (fileRef.current) fileRef.current.value = "";
   }
 
   return (
-    <div>
-      {/* 目前圖片預覽 */}
-      {value && (
-        <div className="mb-2">
-          <img
-            src={value}
-            alt="封面圖預覽"
-            className="w-full max-h-48 object-cover rounded-lg border border-gray-200"
+    <div className="space-y-2">
+      {/* 模式切換 */}
+      <div className="flex gap-3 text-xs">
+        <button
+          type="button"
+          onClick={() => setMode("upload")}
+          className={`transition-colors ${mode === "upload" ? "text-accent font-medium" : "text-gray-400 hover:text-gray-600"}`}
+        >
+          📁 上傳圖片
+        </button>
+        <span className="text-gray-200">|</span>
+        <button
+          type="button"
+          onClick={() => setMode("url")}
+          className={`transition-colors ${mode === "url" ? "text-accent font-medium" : "text-gray-400 hover:text-gray-600"}`}
+        >
+          🔗 貼上網址
+        </button>
+      </div>
+
+      {mode === "upload" ? (
+        <div
+          onClick={() => fileRef.current?.click()}
+          className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-accent transition-colors group"
+        >
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFile}
+            className="hidden"
           />
-          <button
-            type="button"
-            onClick={() => onChange("")}
-            className="text-xs text-red-400 hover:text-red-600 mt-1"
-          >
-            移除圖片
-          </button>
+          {uploading ? (
+            <p className="text-sm text-gray-400">上傳中...</p>
+          ) : (
+            <>
+              <p className="text-2xl mb-1">🖼️</p>
+              <p className="text-xs text-gray-400 group-hover:text-accent transition-colors">
+                點擊選擇圖片（JPG / PNG，最大 5MB）
+              </p>
+            </>
+          )}
         </div>
-      )}
-
-      {/* 上傳按鈕 */}
-      <label className="inline-flex items-center gap-2 text-sm border border-gray-200 rounded-lg px-4 py-2 cursor-pointer hover:border-accent transition-colors">
-        <span>{uploading ? "上傳中..." : "選擇封面圖"}</span>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleUpload}
-          disabled={uploading}
-          className="hidden"
-        />
-      </label>
-
-      {/* 或手動輸入 URL */}
-      <div className="mt-2">
+      ) : (
         <input
           type="url"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="或直接貼上圖片 URL"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-xs outline-none focus:border-accent transition-colors text-gray-500"
+          placeholder="https://example.com/image.jpg"
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent transition-colors"
         />
-      </div>
+      )}
 
-      {/* 錯誤訊息 */}
-      {error && (
-        <p className="text-xs text-red-500 mt-1">{error}</p>
+      {error && <p className="text-xs text-red-500">{error}</p>}
+
+      {/* 預覽 */}
+      {value && (
+        <div className="relative">
+          <Image
+            src={value}
+            alt="封面圖預覽"
+            width={800}
+            height={400}
+            className="w-full h-36 object-cover rounded border border-gray-200"
+          />
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="absolute top-2 right-2 bg-white/80 text-gray-500 text-xs px-2 py-1 rounded hover:bg-red-50 hover:text-red-500 transition-colors"
+          >
+            移除
+          </button>
+        </div>
       )}
     </div>
   );

@@ -1,81 +1,57 @@
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
-import { setSessionCookie } from "@/lib/auth";
-import bcrypt from "bcrypt";
-import crypto from "crypto";
+import { checkOrigin } from "@/lib/auth";
+import { cookies } from "next/headers";
 
-/**
- * POST /api/login — 管理員登入
- *
- * Request body: { email: string, password: string }
- * 成功: { data: { email } } + Set-Cookie
- * 失敗: { error: "帳號或密碼錯誤" }（不區分帳號/密碼）
- */
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
+  if (!checkOrigin(request)) {
+    return NextResponse.json({ error: "來源不允許" }, { status: 403 });
+  }
+
   try {
-    const body = await request.json();
-    const { email, password } = body;
+    const { email, password, rememberMe } = await request.json();
 
-    // 基本驗證
     if (!email || !password) {
-      return NextResponse.json(
-        { error: "請輸入帳號和密碼" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "請輸入帳號和密碼" }, { status: 400 });
     }
 
-    // 查詢管理員
-    const admin = await prisma.adminUser.findUnique({
-      where: { email },
-    });
-
-    // 帳號不存在 → 統一錯誤訊息（不區分帳號/密碼）
-    if (!admin) {
-      return NextResponse.json(
-        { error: "帳號或密碼錯誤" },
-        { status: 401 }
-      );
+    const user = await prisma.adminUser.findUnique({ where: { email } });
+    if (!user) {
+      return NextResponse.json({ error: "帳號或密碼錯誤" }, { status: 401 });
     }
 
-    // 比對密碼
-    const passwordMatch = await bcrypt.compare(password, admin.password);
-
-    if (!passwordMatch) {
-      return NextResponse.json(
-        { error: "帳號或密碼錯誤" },
-        { status: 401 }
-      );
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return NextResponse.json({ error: "帳號或密碼錯誤" }, { status: 401 });
     }
 
-    // 清除該管理員的舊 session（避免 DB 累積）
-    await prisma.session.deleteMany({
-      where: { adminUserId: admin.id },
-    });
+    // 清除舊 session
+    await prisma.session.deleteMany({ where: { adminUserId: user.id } });
 
-    // 產生 session token
-    const token = crypto.randomUUID();
-    const expiresAt = new Date(Date.now() + 86400 * 1000); // 24 小時後
+    const token = randomBytes(32).toString("hex");
+    // 記住我 = 30天；否則 24小時
+    const days = rememberMe ? 30 : 1;
+    const expiresAt = new Date(Date.now() + days * 86400 * 1000);
 
-    // 寫入 DB
     await prisma.session.create({
-      data: {
-        token,
-        expiresAt,
-        adminUserId: admin.id,
-      },
+      data: { token, adminUserId: user.id, expiresAt },
     });
 
-    // 設定 cookie
-    await setSessionCookie(token);
-
-    return NextResponse.json({
-      data: { email: admin.email },
+    const cookieStore = await cookies();
+    cookieStore.set("session_token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: days * 86400,
     });
+
+    return NextResponse.json({ data: { email: user.email } });
   } catch {
-    // 不外洩原始錯誤
-    return NextResponse.json(
-      { error: "登入時發生錯誤" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "登入時發生錯誤" }, { status: 500 });
   }
 }
