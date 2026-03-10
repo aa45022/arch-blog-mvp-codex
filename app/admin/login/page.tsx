@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 /**
  * 管理員登入頁 — /admin/login
@@ -105,12 +106,12 @@ export default function AdminLoginPage() {
 
         {/* 返回前台 */}
         <div className="text-center mt-4">
-          <a
+          <Link
             href="/"
             className="text-xs text-gray-400 hover:text-accent transition-colors"
           >
             ← 返回前台
-          </a>
+          </Link>
         </div>
       </div>
     </div>

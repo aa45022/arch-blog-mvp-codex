@@ -53,6 +53,11 @@ export default function PostCard({
         <p className="text-sm text-gray-500 leading-relaxed mb-3">
           {excerpt}
         </p>
+
+        {/* 閱讀更多 */}
+        <p className="text-xs text-accent font-medium mt-1">
+          閱讀全文 →
+        </p>
       </Link>
 
       {/* 標籤 */}

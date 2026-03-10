@@ -47,6 +47,11 @@ export async function POST(request: Request) {
       );
     }
 
+    // 清除該管理員的舊 session（避免 DB 累積）
+    await prisma.session.deleteMany({
+      where: { adminUserId: admin.id },
+    });
+
     // 產生 session token
     const token = crypto.randomUUID();
     const expiresAt = new Date(Date.now() + 86400 * 1000); // 24 小時後

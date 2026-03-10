@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
@@ -102,10 +103,12 @@ export default async function PostPage({
 
             {/* 封面圖 */}
             {post.coverImage && (
-              <img
-                src={post.coverImage}
+              <Image
+                src={post.coverImage!}
                 alt={post.title}
-                className="w-full rounded-lg mt-6"
+                width={680}
+                height={400}
+                className="w-full rounded-lg mt-6 object-cover"
               />
             )}
           </header>

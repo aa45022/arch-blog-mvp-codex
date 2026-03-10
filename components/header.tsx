@@ -2,7 +2,6 @@ import Link from "next/link";
 
 /**
  * 頂部導覽列
- * 🎨 可改：網站名稱、導覽連結
  */
 export default function Header() {
   return (
@@ -26,7 +25,18 @@ export default function Header() {
           >
             首頁
           </Link>
-          {/* 🎨 未來可加更多連結，如「關於」頁 */}
+          <Link
+            href="/?category=site-planning"
+            className="text-gray-500 hover:text-accent transition-colors hidden sm:block"
+          >
+            敷地計畫
+          </Link>
+          <Link
+            href="/?category=urban-design"
+            className="text-gray-500 hover:text-accent transition-colors hidden sm:block"
+          >
+            都市設計
+          </Link>
         </nav>
       </div>
     </header>
