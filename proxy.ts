@@ -13,7 +13,7 @@ import { NextResponse } from "next/server";
  *   - 有 cookie → 放行（不查 DB）
  *   - 不做任何 DB 操作
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 排除 /admin/login — 登入頁不需要驗證
@@ -35,6 +35,3 @@ export function middleware(request: NextRequest) {
 }
 
 // 只攔截 /admin/* 路由，不影響前台和 API
-export const config = {
-  matcher: ["/admin/:path*"],
-};
