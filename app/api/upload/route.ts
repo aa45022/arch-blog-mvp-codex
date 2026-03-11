@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { validateSession } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -12,13 +13,9 @@ export async function POST(request: Request) {
     const file = formData.get("file") as File;
 
     if (!file) return NextResponse.json({ error: "沒有檔案" }, { status: 400 });
-
-    // 檢查檔案類型
     if (!file.type.startsWith("image/")) {
       return NextResponse.json({ error: "只支援圖片格式" }, { status: 400 });
     }
-
-    // 檢查檔案大小（5MB 上限）
     if (file.size > 5 * 1024 * 1024) {
       return NextResponse.json({ error: "圖片大小不能超過 5MB" }, { status: 400 });
     }
@@ -30,7 +27,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Cloudinary 未設定" }, { status: 500 });
     }
 
-    // 上傳到 Cloudinary
     const uploadForm = new FormData();
     uploadForm.append("file", file);
     uploadForm.append("upload_preset", uploadPreset);
@@ -40,12 +36,21 @@ export async function POST(request: Request) {
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       { method: "POST", body: uploadForm }
     );
-
     const data = await res.json();
 
     if (!res.ok) {
       return NextResponse.json({ error: data.error?.message || "上傳失敗" }, { status: 500 });
     }
+
+    // 儲存到媒體庫
+    await prisma.media.create({
+      data: {
+        url: data.secure_url,
+        filename: file.name,
+        mimeType: file.type,
+        size: file.size,
+      },
+    });
 
     return NextResponse.json({ url: data.secure_url });
   } catch {

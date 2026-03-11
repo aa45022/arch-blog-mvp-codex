@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import MarkdownEditor from "@/components/markdown-editor";
 import ImageUploader from "@/components/image-uploader";
 import VersionHistory from "@/components/version-history";
 import ArticlePreview from "@/components/article-preview";
+import { Save } from "lucide-react";
 
 type PostFormProps = { postId?: number };
 type Category = { id: number; name: string; slug: string };
@@ -36,6 +37,11 @@ export default function PostForm({ postId }: PostFormProps) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  // 自動儲存
+  const [autoSaveStatus, setAutoSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const autoSaveTimer = useRef<NodeJS.Timeout | null>(null);
+  const lastContent = useRef<string>("");
 
   // 快速新增分類
   const [showAddCategory, setShowAddCategory] = useState(false);
@@ -93,6 +99,47 @@ export default function PostForm({ postId }: PostFormProps) {
         setLoading(false);
       });
   }, [postId]);
+
+  // 自動儲存（僅編輯模式，每 30 秒）
+  const autoSave = useCallback(async () => {
+    if (!isEdit || !postId || saving) return;
+    const currentContent = `${title}|${excerpt}|${content}`;
+    if (currentContent === lastContent.current || !title || !content) return;
+
+    setAutoSaveStatus("saving");
+    try {
+      const cleanSlug = title.toLowerCase().trim().replace(/[^\w\u4e00-\u9fff]+/g, "-").replace(/^-+|-+$/g, "");
+      const body = {
+        title, slug: slug || cleanSlug, excerpt, content, coverImage: coverImage || null,
+        categoryId: categoryId ? Number(categoryId) : undefined, tagIds: selectedTagIds,
+        published, featured, excerptRender,
+        seriesId: seriesId ? Number(seriesId) : null,
+        seriesOrder: seriesOrder ? Number(seriesOrder) : null,
+      };
+      const res = await fetch(`/api/posts/${postId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        lastContent.current = currentContent;
+        setAutoSaveStatus("saved");
+        setTimeout(() => setAutoSaveStatus("idle"), 3000);
+      } else {
+        setAutoSaveStatus("error");
+      }
+    } catch {
+      setAutoSaveStatus("error");
+    }
+  }, [isEdit, postId, title, slug, excerpt, content, coverImage, categoryId, selectedTagIds, published, featured, excerptRender, seriesId, seriesOrder, saving]);
+
+  useEffect(() => {
+    if (!isEdit) return;
+    autoSaveTimer.current = setInterval(autoSave, 30000);
+    return () => {
+      if (autoSaveTimer.current) clearInterval(autoSaveTimer.current);
+    };
+  }, [isEdit, autoSave]);
 
   function generateSlug(value: string): string {
     return value
@@ -449,6 +496,27 @@ export default function PostForm({ postId }: PostFormProps) {
             className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors">
             取消
           </button>
+          {/* 自動儲存狀態 */}
+          {isEdit && (
+            <div className="ml-auto flex items-center gap-1.5">
+              {autoSaveStatus === "saving" && (
+                <span className="text-[10px] text-neutral-400 animate-pulse flex items-center gap-1">
+                  <Save className="w-3 h-3" /> 自動儲存中...
+                </span>
+              )}
+              {autoSaveStatus === "saved" && (
+                <span className="text-[10px] text-green-500 flex items-center gap-1">
+                  <Save className="w-3 h-3" /> 已自動儲存
+                </span>
+              )}
+              {autoSaveStatus === "error" && (
+                <span className="text-[10px] text-red-400">自動儲存失敗</span>
+              )}
+              {autoSaveStatus === "idle" && (
+                <span className="text-[10px] text-neutral-300 dark:text-neutral-700">每 30 秒自動儲存</span>
+              )}
+            </div>
+          )}
         </div>
       </form>
 

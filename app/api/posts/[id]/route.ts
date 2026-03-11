@@ -33,6 +33,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await request.json();
+
+    // 快速編輯模式 — 只更新標題
+    if (body.quickEdit) {
+      const post = await prisma.post.update({
+        where: { id: Number(id) },
+        data: { title: body.title },
+      });
+      revalidatePath("/");
+      revalidatePath("/admin/posts");
+      return NextResponse.json({ data: post });
+    }
+
     const { title, slug: rawSlug, excerpt, content, categoryId, tagIds, coverImage, published, featured, excerptRender, seriesId, seriesOrder } = body;
 
     if (!title || !rawSlug || !excerpt || !content || !categoryId) {

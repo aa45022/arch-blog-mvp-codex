@@ -73,6 +73,16 @@ model Series {
   posts       Post[]
 }
 
+// ─── 媒體庫 ───
+model Media {
+  id        Int      @id @default(autoincrement())
+  url       String
+  filename  String
+  mimeType  String   @default("image/jpeg")
+  size      Int      @default(0)  // bytes
+  createdAt DateTime @default(now())
+}
+
 // ─── Session ───
 model Session {
   id          Int       @id @default(autoincrement())

@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import KeyboardShortcuts from "@/components/keyboard-shortcuts";
+import UmamiAnalytics from "@/components/umami-analytics";
+import ServiceWorkerRegister from "@/components/sw-register";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://arch-blog.zeabur.app";
@@ -14,6 +16,7 @@ export const metadata: Metadata = {
   },
   description: "SITE LAB 敷地實驗室 — 建築師考試與都市設計學習筆記，涵蓋敷地計畫、韌性城市、TOD、綠色基盤等主題。",
   metadataBase: new URL(SITE_URL),
+  manifest: "/manifest.json",
   openGraph: {
     type: "website",
     siteName: "SITE LAB 敷地實驗室",
@@ -27,6 +30,18 @@ export const metadata: Metadata = {
       "application/rss+xml": "/feed.xml",
     },
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "SITE LAB",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
 };
 
 // 防止深色模式閃白的 inline script
@@ -56,10 +71,15 @@ export default function RootLayout({
         />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="alternate" type="application/rss+xml" title="SITE LAB RSS" href="/feed.xml" />
+        {/* PWA Icons */}
+        <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body className="font-sans bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-300 min-h-screen flex flex-col transition-colors">
         {children}
         <KeyboardShortcuts />
+        <UmamiAnalytics />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

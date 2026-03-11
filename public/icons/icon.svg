@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#171717"/>
+  <text x="256" y="200" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="120" fill="#ffffff" letter-spacing="-2">SITE</text>
+  <text x="256" y="320" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="120" fill="#ffffff" letter-spacing="-2">LAB</text>
+  <line x1="100" y1="350" x2="412" y2="350" stroke="#404040" stroke-width="2"/>
+  <text x="256" y="400" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="400" font-size="48" fill="#737373" letter-spacing="8">敷地實驗室</text>
+</svg>
