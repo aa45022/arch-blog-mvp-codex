@@ -10,6 +10,7 @@ import ArticlePreview from "@/components/article-preview";
 type PostFormProps = { postId?: number };
 type Category = { id: number; name: string; slug: string };
 type Tag = { id: number; name: string; slug: string };
+type Series = { id: number; title: string; slug: string };
 
 export default function PostForm({ postId }: PostFormProps) {
   const router = useRouter();
@@ -25,10 +26,13 @@ export default function PostForm({ postId }: PostFormProps) {
   const [published, setPublished] = useState(false);
   const [featured, setFeatured] = useState(false);
   const [excerptRender, setExcerptRender] = useState(false);
+  const [seriesId, setSeriesId] = useState<number | "">("");
+  const [seriesOrder, setSeriesOrder] = useState<number | "">("");
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
+  const [seriesList, setSeriesList] = useState<Series[]>([]);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -45,15 +49,24 @@ export default function PostForm({ postId }: PostFormProps) {
   const [addingTag, setAddingTag] = useState(false);
   const [tagError, setTagError] = useState("");
 
+  // 快速新增系列
+  const [showAddSeries, setShowAddSeries] = useState(false);
+  const [newSeriesTitle, setNewSeriesTitle] = useState("");
+  const [addingSeries, setAddingSeries] = useState(false);
+  const [seriesError, setSeriesError] = useState("");
+
   async function loadOptions() {
-    const [catRes, tagRes] = await Promise.all([
+    const [catRes, tagRes, seriesRes] = await Promise.all([
       fetch("/api/categories"),
       fetch("/api/tags"),
+      fetch("/api/series"),
     ]);
     const catData = await catRes.json();
     const tagData = await tagRes.json();
+    const seriesData = await seriesRes.json();
     if (catData.data) setCategories(catData.data);
     if (tagData.data) setTags(tagData.data);
+    if (seriesData.data) setSeriesList(seriesData.data);
   }
 
   useEffect(() => { loadOptions(); }, []);
@@ -73,6 +86,8 @@ export default function PostForm({ postId }: PostFormProps) {
           setPublished(p.published);
           setFeatured(p.featured ?? false);
           setExcerptRender(p.excerptRender ?? false);
+          setSeriesId(p.seriesId ?? "");
+          setSeriesOrder(p.seriesOrder ?? "");
           setSlugManuallyEdited(true);
         }
         setLoading(false);
@@ -154,6 +169,28 @@ export default function PostForm({ postId }: PostFormProps) {
     setAddingTag(false);
   }
 
+  async function handleAddSeries() {
+    if (!newSeriesTitle.trim()) return;
+    setSeriesError(""); setAddingSeries(true);
+
+    const res = await fetch("/api/series", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: newSeriesTitle.trim() }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setSeriesError(data.error || "新增失敗");
+    } else {
+      await loadOptions();
+      setSeriesId(data.data.id);
+      setNewSeriesTitle("");
+      setShowAddSeries(false);
+    }
+    setAddingSeries(false);
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -166,8 +203,12 @@ export default function PostForm({ postId }: PostFormProps) {
     const cleanSlug = generateSlug(slug);
 
     try {
-      const body = { title, slug: cleanSlug, excerpt, content, coverImage: coverImage || null,
-        categoryId: Number(categoryId), tagIds: selectedTagIds, published, featured, excerptRender };
+      const body = {
+        title, slug: cleanSlug, excerpt, content, coverImage: coverImage || null,
+        categoryId: Number(categoryId), tagIds: selectedTagIds, published, featured, excerptRender,
+        seriesId: seriesId ? Number(seriesId) : null,
+        seriesOrder: seriesOrder ? Number(seriesOrder) : null,
+      };
       const url = isEdit ? `/api/posts/${postId}` : "/api/posts";
       const method = isEdit ? "PUT" : "POST";
       const res = await fetch(url, {
@@ -323,6 +364,49 @@ export default function PostForm({ postId }: PostFormProps) {
                 {tag.name}
               </button>
             ))}
+          </div>
+        </div>
+
+        {/* 系列 */}
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-medium text-neutral-500 dark:text-neutral-400">文章系列（選填）</label>
+            <button type="button" onClick={() => { setShowAddSeries(!showAddSeries); setSeriesError(""); }}
+              className="text-xs text-neutral-900 dark:text-neutral-100 hover:opacity-60 transition-opacity">
+              {showAddSeries ? "取消" : "+ 新增系列"}
+            </button>
+          </div>
+
+          {showAddSeries && (
+            <div className="mb-2 space-y-1">
+              <div className="flex gap-1">
+                <input type="text" value={newSeriesTitle}
+                  onChange={(e) => setNewSeriesTitle(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddSeries())}
+                  placeholder="系列標題"
+                  className="flex-1 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors" />
+                <button type="button" onClick={handleAddSeries} disabled={addingSeries}
+                  className="bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs px-3 py-2 hover:bg-neutral-700 dark:hover:bg-neutral-300 disabled:opacity-50">
+                  {addingSeries ? "..." : "新增"}
+                </button>
+              </div>
+              {seriesError && <p className="text-xs text-red-500">{seriesError}</p>}
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3">
+            <select value={seriesId} onChange={(e) => setSeriesId(e.target.value ? Number(e.target.value) : "")}
+              className="w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors">
+              <option value="">無系列</option>
+              {seriesList.map((s) => (
+                <option key={s.id} value={s.id}>{s.title}</option>
+              ))}
+            </select>
+            {seriesId && (
+              <input type="number" value={seriesOrder} onChange={(e) => setSeriesOrder(e.target.value ? Number(e.target.value) : "")}
+                placeholder="排序（1, 2, 3...）" min={1}
+                className="w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors" />
+            )}
           </div>
         </div>
 

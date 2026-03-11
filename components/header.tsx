@@ -34,6 +34,18 @@ export default function Header() {
           >
             時事
           </Link>
+          <Link
+            href="/reading-list"
+            className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors uppercase tracking-wider hidden sm:block"
+          >
+            書籤
+          </Link>
+          <Link
+            href="/stats"
+            className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors uppercase tracking-wider hidden sm:block"
+          >
+            數據
+          </Link>
           <HeaderSearch />
           <Link
             href="/feed.xml"

@@ -16,6 +16,9 @@ import PostNavigation from "@/components/post-navigation";
 import RelatedPosts from "@/components/related-posts";
 import ViewCounter from "@/components/view-counter";
 import ShareButtons from "@/components/share-buttons";
+import BookmarkButton from "@/components/bookmark-button";
+import GiscusComments from "@/components/giscus-comments";
+import SeriesNav from "@/components/series-nav";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://arch-blog.zeabur.app";
 const SITE_NAME = "SITE LAB 敷地實驗室";
@@ -87,13 +90,14 @@ export default async function PostPage({
     include: {
       category: { select: { name: true, slug: true } },
       tags: { select: { name: true, slug: true } },
+      series: { select: { id: true, title: true, slug: true } },
     },
   });
 
   if (!post) notFound();
 
-  // 上一篇 / 下一篇 + 相關文章
-  const [prevPost, nextPost, relatedPosts] = await Promise.all([
+  // 上一篇 / 下一篇 + 相關文章 + 系列文章
+  const [prevPost, nextPost, relatedPosts, seriesPosts] = await Promise.all([
     prisma.post.findFirst({
       where: { published: true, createdAt: { gt: post.createdAt } },
       orderBy: { createdAt: "asc" },
@@ -118,6 +122,14 @@ export default async function PostPage({
       take: 3,
       select: { title: true, slug: true, excerpt: true, coverImage: true, createdAt: true },
     }),
+    // 同系列文章
+    post.seriesId
+      ? prisma.post.findMany({
+          where: { seriesId: post.seriesId, published: true },
+          orderBy: { seriesOrder: "asc" },
+          select: { id: true, title: true, slug: true, seriesOrder: true },
+        })
+      : Promise.resolve([]),
   ]);
 
   const date = post.createdAt.toLocaleDateString("zh-TW", {
@@ -202,6 +214,16 @@ export default async function PostPage({
               )}
             </header>
 
+            {/* 系列導覽 */}
+            {post.series && seriesPosts.length > 1 && (
+              <SeriesNav
+                seriesTitle={post.series.title}
+                seriesSlug={post.series.slug}
+                posts={seriesPosts}
+                currentPostId={post.id}
+              />
+            )}
+
             {/* 內容 */}
             <div className="prose text-neutral-800 dark:text-neutral-300">
               <MarkdownContent content={post.content} />
@@ -219,10 +241,18 @@ export default async function PostPage({
                   ))}
                 </div>
               )}
-              <ShareButtons
-                url={`${SITE_URL}/posts/${slug}`}
-                title={post.title}
-              />
+              <div className="flex items-center justify-between">
+                <ShareButtons
+                  url={`${SITE_URL}/posts/${slug}`}
+                  title={post.title}
+                />
+                <BookmarkButton
+                  postId={post.id}
+                  postSlug={post.slug}
+                  postTitle={post.title}
+                  variant="full"
+                />
+              </div>
             </div>
 
             {/* 上一篇 / 下一篇 */}
@@ -230,6 +260,9 @@ export default async function PostPage({
 
             {/* 相關文章 */}
             <RelatedPosts posts={relatedPosts} />
+
+            {/* 留言 */}
+            <GiscusComments />
 
             <div className="mt-8">
               <Link href="/" className="text-xs text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors">

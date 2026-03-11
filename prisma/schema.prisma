@@ -42,6 +42,9 @@ model Post {
   category   Category  @relation(fields: [categoryId], references: [id])
   tags       Tag[]     // 隱式多對多（Prisma 自動建 _PostToTag 中間表）
   versions   PostVersion[]
+  seriesId    Int?
+  seriesOrder Int?      // 在系列中的排序（1, 2, 3...）
+  series      Series?   @relation(fields: [seriesId], references: [id])
 }
 
 // ─── 分類 ───
@@ -58,6 +61,16 @@ model Tag {
   name  String @unique
   slug  String @unique
   posts Post[] // 隱式多對多
+}
+
+// ─── 文章系列 ───
+model Series {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  posts       Post[]
 }
 
 // ─── Session ───

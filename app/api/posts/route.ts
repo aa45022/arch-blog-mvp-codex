@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { title, slug: rawSlug, excerpt, content, categoryId, tagIds, coverImage, published, featured, excerptRender } = body;
+    const { title, slug: rawSlug, excerpt, content, categoryId, tagIds, coverImage, published, featured, excerptRender, seriesId, seriesOrder } = body;
 
     if (!title || !rawSlug || !excerpt || !content || !categoryId) {
       return NextResponse.json({ error: "必填欄位不完整" }, { status: 400 });
@@ -58,6 +58,8 @@ export async function POST(request: Request) {
         featured: featured ?? false,
         excerptRender: excerptRender ?? false,
         categoryId: Number(categoryId),
+        seriesId: seriesId ? Number(seriesId) : null,
+        seriesOrder: seriesOrder ? Number(seriesOrder) : null,
         tags: tagIds?.length
           ? { connect: tagIds.map((id: number) => ({ id: Number(id) })) }
           : undefined,
