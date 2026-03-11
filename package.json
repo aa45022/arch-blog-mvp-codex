@@ -4,7 +4,7 @@
   "description": "建築學習筆記部落格 — Next.js + Prisma + Tailwind",
   "type": "module",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "dev": "next dev --turbopack",
