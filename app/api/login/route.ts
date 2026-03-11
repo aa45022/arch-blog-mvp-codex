@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { checkOrigin } from "@/lib/auth";
