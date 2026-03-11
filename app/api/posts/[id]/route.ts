@@ -33,7 +33,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, slug, excerpt, content, categoryId, tagIds, coverImage, published } = body;
+    const { title, slug, excerpt, content, categoryId, tagIds, coverImage, published, featured } = body;
 
     if (!title || !slug || !excerpt || !content || !categoryId) {
       return NextResponse.json({ error: "必填欄位不完整" }, { status: 400 });
@@ -50,6 +50,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         title, slug, excerpt, content,
         coverImage: coverImage || null,
         published: published ?? false,
+        featured: featured ?? false,
         categoryId: Number(categoryId),
         tags: {
           set: [],
@@ -65,6 +66,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     });
 
     revalidatePath("/");
+    revalidatePath("/news");
     revalidatePath(`/posts/${slug}`);
     revalidatePath("/admin/posts");
 
@@ -85,6 +87,7 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     await prisma.post.delete({ where: { id: Number(id) } });
 
     revalidatePath("/");
+    revalidatePath("/news");
     revalidatePath("/admin/posts");
     if (post) revalidatePath(`/posts/${post.slug}`);
 

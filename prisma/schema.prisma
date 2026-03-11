@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════
-// Prisma Schema — 建築學習筆記部落格
+// Prisma Schema — SITE LAB 敷地實驗室
 // generator: prisma-client（Prisma 7 Rust-free）
 // output:    ./generated/prisma（不在 node_modules）
 // ═══════════════════════════════════════════════
@@ -32,6 +32,8 @@ model Post {
   content    String    // Markdown 原文
   coverImage String?   // Cloudinary URL（nullable）
   published  Boolean   @default(false)
+  featured   Boolean   @default(false)  // 精選文章（Hero 用）
+  viewCount  Int       @default(0)      // 閱讀數統計
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 
@@ -57,8 +59,6 @@ model Tag {
 }
 
 // ─── Session ───
-// MVP 決策：token 存原始值，不 hash
-// OPEN_ASSUMPTIONS: 多管理者時升級為 hash 儲存
 model Session {
   id          Int       @id @default(autoincrement())
   token       String    @unique

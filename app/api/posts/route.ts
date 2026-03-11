@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { title, slug, excerpt, content, categoryId, tagIds, coverImage, published } = body;
+    const { title, slug, excerpt, content, categoryId, tagIds, coverImage, published, featured } = body;
 
     if (!title || !slug || !excerpt || !content || !categoryId) {
       return NextResponse.json({ error: "必填欄位不完整" }, { status: 400 });
@@ -44,6 +44,7 @@ export async function POST(request: Request) {
         title, slug, excerpt, content,
         coverImage: coverImage || null,
         published: published ?? false,
+        featured: featured ?? false,
         categoryId: Number(categoryId),
         tags: tagIds?.length
           ? { connect: tagIds.map((id: number) => ({ id: Number(id) })) }
@@ -55,8 +56,8 @@ export async function POST(request: Request) {
       },
     });
 
-    // 新增後立即刷新前台快取
     revalidatePath("/");
+    revalidatePath("/news");
     revalidatePath("/admin/posts");
 
     return NextResponse.json({ data: post }, { status: 201 });

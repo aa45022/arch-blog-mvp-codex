@@ -1,8 +1,9 @@
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
+import { Rss } from "lucide-react";
 
 /**
- * SITE LAB 頂部導覽列 — 建築雜誌風
+ * SITE LAB 頂部導覽列 — 含時事專欄 + RSS
  */
 export default function Header() {
   return (
@@ -19,24 +20,25 @@ export default function Header() {
         </Link>
 
         {/* 導覽連結 */}
-        <nav className="flex items-center gap-5 text-xs">
+        <nav className="flex items-center gap-4 sm:gap-5 text-xs">
           <Link
             href="/"
+            className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors uppercase tracking-wider hidden sm:block"
+          >
+            筆記
+          </Link>
+          <Link
+            href="/news"
             className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors uppercase tracking-wider"
           >
-            首頁
+            時事
           </Link>
           <Link
-            href="/?category=site-planning"
-            className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors uppercase tracking-wider hidden sm:block"
+            href="/feed.xml"
+            className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
+            title="RSS 訂閱"
           >
-            敷地計畫
-          </Link>
-          <Link
-            href="/?category=urban-design"
-            className="text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors uppercase tracking-wider hidden sm:block"
-          >
-            都市設計
+            <Rss className="w-3.5 h-3.5" />
           </Link>
           <ThemeToggle />
         </nav>
