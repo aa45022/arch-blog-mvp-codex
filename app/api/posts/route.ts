@@ -30,10 +30,21 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const { title, slug, excerpt, content, categoryId, tagIds, coverImage, published, featured } = body;
+    const { title, slug: rawSlug, excerpt, content, categoryId, tagIds, coverImage, published, featured } = body;
 
-    if (!title || !slug || !excerpt || !content || !categoryId) {
+    if (!title || !rawSlug || !excerpt || !content || !categoryId) {
       return NextResponse.json({ error: "必填欄位不完整" }, { status: 400 });
+    }
+
+    // 清理 slug：去除空格/特殊字元，轉小寫
+    const slug = rawSlug
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\u4e00-\u9fff]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    if (!slug) {
+      return NextResponse.json({ error: "網址代稱無效" }, { status: 400 });
     }
 
     const existing = await prisma.post.findUnique({ where: { slug } });

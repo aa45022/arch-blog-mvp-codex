@@ -25,8 +25,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const post = await prisma.post.findUnique({
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
+  const post = await prisma.post.findFirst({
     where: { slug, published: true },
     select: { title: true, excerpt: true, coverImage: true, createdAt: true,
       category: { select: { name: true } }, tags: { select: { name: true } } },
@@ -74,9 +75,10 @@ export default async function PostPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  const slug = decodeURIComponent(rawSlug);
 
-  const post = await prisma.post.findUnique({
+  const post = await prisma.post.findFirst({
     where: { slug, published: true },
     include: {
       category: { select: { name: true, slug: true } },

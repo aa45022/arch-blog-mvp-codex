@@ -22,6 +22,7 @@ export default function PostForm({ postId }: PostFormProps) {
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [published, setPublished] = useState(false);
   const [featured, setFeatured] = useState(false);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(false);
@@ -61,20 +62,35 @@ export default function PostForm({ postId }: PostFormProps) {
           setSelectedTagIds(p.tags.map((t: Tag) => t.id));
           setPublished(p.published);
           setFeatured(p.featured ?? false);
+          setSlugManuallyEdited(true);
         }
         setLoading(false);
       });
   }, [postId]);
 
+  function generateSlug(value: string): string {
+    return value
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\u4e00-\u9fff]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
   function handleTitleChange(value: string) {
     setTitle(value);
-    if (!isEdit && !slug) {
-      const autoSlug = value
-        .toLowerCase()
-        .replace(/[^\w\u4e00-\u9fff]+/g, "-")
-        .replace(/^-|-$/g, "");
-      setSlug(autoSlug);
+    if (!isEdit && !slugManuallyEdited) {
+      setSlug(generateSlug(value));
     }
+  }
+
+  function handleSlugChange(value: string) {
+    setSlugManuallyEdited(true);
+    setSlug(value);
+  }
+
+  function handleSlugBlur() {
+    // 使用者離開 slug 欄位時，自動修正格式
+    setSlug(generateSlug(slug));
   }
 
   function toggleTag(tagId: number) {
@@ -114,8 +130,10 @@ export default function PostForm({ postId }: PostFormProps) {
     }
     setSaving(true);
 
+    const cleanSlug = generateSlug(slug);
+
     try {
-      const body = { title, slug, excerpt, content, coverImage: coverImage || null,
+      const body = { title, slug: cleanSlug, excerpt, content, coverImage: coverImage || null,
         categoryId: Number(categoryId), tagIds: selectedTagIds, published, featured };
       const url = isEdit ? `/api/posts/${postId}` : "/api/posts";
       const method = isEdit ? "PUT" : "POST";
@@ -157,7 +175,8 @@ export default function PostForm({ postId }: PostFormProps) {
           <div className="flex items-center gap-1 text-xs text-neutral-400 dark:text-neutral-500 mb-1">
             <span>/posts/</span><span className="text-neutral-900 dark:text-neutral-100">{slug || "..."}</span>
           </div>
-          <input type="text" value={slug} onChange={(e) => setSlug(e.target.value)}
+          <input type="text" value={slug} onChange={(e) => handleSlugChange(e.target.value)}
+            onBlur={handleSlugBlur}
             placeholder="url-friendly-slug"
             className="w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors font-mono" />
         </div>
