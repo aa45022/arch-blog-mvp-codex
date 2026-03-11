@@ -46,10 +46,17 @@ export default function RootLayout({
   return (
     <html lang="zh-TW" suppressHydrationWarning>
       <head>
+        {/* Google Fonts — 宋體標題 + 黑體內文 + 英文幾何體 */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <link rel="alternate" type="application/rss+xml" title="SITE LAB RSS" href="/feed.xml" />
       </head>
-      <body className="bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-300 min-h-screen flex flex-col transition-colors">
+      <body className="font-sans bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-300 min-h-screen flex flex-col transition-colors">
         {children}
       </body>
     </html>

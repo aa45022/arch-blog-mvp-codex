@@ -17,7 +17,7 @@ export default async function AdminDashboardLayout({
       <header className="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/admin/posts" className="text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
+            <Link href="/admin/posts" className="text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight font-display">
               SITE LAB
             </Link>
             <span className="text-[10px] bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 px-2 py-0.5 uppercase tracking-wider font-medium">後台</span>

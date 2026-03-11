@@ -12,10 +12,10 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 py-5 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="hover:opacity-70 transition-opacity">
-          <h1 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-none">
+          <h1 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-none font-display">
             SITE LAB
           </h1>
-          <p className="text-[10px] text-neutral-400 dark:text-neutral-500 tracking-[0.2em] mt-0.5">
+          <p className="text-[10px] text-neutral-400 dark:text-neutral-500 tracking-[0.2em] mt-0.5 font-serif">
             敷地實驗室
           </p>
         </Link>

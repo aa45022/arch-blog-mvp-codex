@@ -10,6 +10,7 @@ import {
 type MarkdownEditorProps = {
   value: string;
   onChange: (value: string) => void;
+  compact?: boolean;
 };
 
 function renderMarkdown(md: string): string {
@@ -39,7 +40,7 @@ function countWords(text: string): { chars: number; chinese: number; english: nu
   return { chars, chinese, english };
 }
 
-export default function MarkdownEditor({ value, onChange }: MarkdownEditorProps) {
+export default function MarkdownEditor({ value, onChange, compact = false }: MarkdownEditorProps) {
   const [tab, setTab] = useState<"write" | "preview">("write");
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -266,15 +267,17 @@ export default function MarkdownEditor({ value, onChange }: MarkdownEditorProps)
           </button>
           <div className="flex-1" />
 
-          {/* 全螢幕切換 */}
-          <button
-            type="button"
-            onClick={() => setIsFullscreen(!isFullscreen)}
-            title={isFullscreen ? "離開全螢幕 (ESC)" : "全螢幕編輯"}
-            className="w-7 h-7 flex items-center justify-center text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors mr-1"
-          >
-            {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
-          </button>
+          {/* 全螢幕切換 — compact 模式隱藏 */}
+          {!compact && (
+            <button
+              type="button"
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              title={isFullscreen ? "離開全螢幕 (ESC)" : "全螢幕編輯"}
+              className="w-7 h-7 flex items-center justify-center text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors mr-1"
+            >
+              {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+            </button>
+          )}
 
           <span className="text-[10px] text-neutral-300 dark:text-neutral-600 px-3 py-2 self-center">
             支援 Markdown
@@ -322,7 +325,7 @@ export default function MarkdownEditor({ value, onChange }: MarkdownEditorProps)
           onDragOver={handleDragOver}
           onPaste={handlePaste}
           placeholder={`## 段落標題\n\n內文段落...\n\n- 清單項目\n\n**粗體** *斜體* \`程式碼\`\n\n💡 可直接拖拽或貼上圖片`}
-          rows={isFullscreen ? undefined : 16}
+          rows={isFullscreen ? undefined : compact ? 6 : 16}
           className={`w-full px-4 py-3 text-sm font-mono text-neutral-800 dark:text-neutral-200 outline-none resize-y bg-white dark:bg-neutral-950 leading-relaxed ${
             isFullscreen ? "flex-1 resize-none" : ""
           }`}

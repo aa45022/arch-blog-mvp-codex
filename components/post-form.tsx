@@ -213,9 +213,8 @@ export default function PostForm({ postId }: PostFormProps) {
         {/* 摘要 */}
         <div>
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1.5">摘要 <span className="text-red-400">*</span></label>
-          <textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)}
-            placeholder="文章簡短描述，顯示於首頁卡片" rows={2}
-            className="w-full border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors resize-y" />
+          <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mb-1.5">支援 Markdown，首頁卡片和 SEO 描述會自動轉為純文字</p>
+          <MarkdownEditor value={excerpt} onChange={setExcerpt} compact />
         </div>
 
         {/* 分類 + 發佈狀態 + 精選 */}

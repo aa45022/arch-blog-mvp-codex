@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { stripMarkdown } from "@/lib/utils";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://arch-blog.zeabur.app";
 const SITE_NAME = "SITE LAB 敷地實驗室";
@@ -30,7 +31,7 @@ export async function GET() {
     <item>
       <title>${escapeXml(post.title)}</title>
       <link>${SITE_URL}/posts/${post.slug}</link>
-      <description>${escapeXml(post.excerpt)}</description>
+      <description>${escapeXml(stripMarkdown(post.excerpt))}</description>
       <category>${escapeXml(post.category.name)}</category>
       <pubDate>${post.createdAt.toUTCString()}</pubDate>
       <guid isPermaLink="true">${SITE_URL}/posts/${post.slug}</guid>

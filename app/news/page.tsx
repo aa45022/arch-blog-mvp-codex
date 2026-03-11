@@ -4,6 +4,7 @@ import Image from "next/image";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Pagination from "@/components/pagination";
+import { stripMarkdown } from "@/lib/utils";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -60,7 +61,7 @@ export default async function NewsPage({
   return (
     <>
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 page-enter">
         <section className="bg-white dark:bg-neutral-950 px-4 py-12">
           <div className="max-w-4xl mx-auto">
             {/* 標題區 */}
@@ -68,7 +69,7 @@ export default async function NewsPage({
               <p className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.25em] mb-3">
                 Current Affairs
               </p>
-              <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
+              <h1 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 tracking-wide font-serif">
                 時事專欄
               </h1>
               <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-3">
@@ -115,11 +116,11 @@ export default async function NewsPage({
                                 </>
                               )}
                             </div>
-                            <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug tracking-tight mb-2 group-hover:opacity-60 transition-opacity">
+                            <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 leading-snug tracking-wide mb-2 group-hover:opacity-60 transition-opacity font-serif">
                               {post.title}
                             </h2>
                             <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
-                              {post.excerpt}
+                              {stripMarkdown(post.excerpt)}
                             </p>
                           </div>
                           {/* 縮圖 */}

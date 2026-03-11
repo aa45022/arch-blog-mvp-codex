@@ -6,6 +6,8 @@ import SearchBar from "@/components/search-bar";
 import SidebarFilter from "@/components/sidebar-filter";
 import HeroSection from "@/components/hero-section";
 import Pagination from "@/components/pagination";
+import ScrollReveal from "@/components/scroll-reveal";
+import { stripMarkdown } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -108,10 +110,22 @@ export default async function HomePage({
 
   const totalPages = Math.ceil(totalCount / PER_PAGE);
 
+  /**
+   * 卡片節奏：大小交錯
+   * 第 0 張 = large（佔 2 欄）
+   * 第 1, 2 張 = small
+   * 第 3 張 = large
+   * 第 4, 5 張 = small ... 循環
+   */
+  function getCardVariant(index: number): "large" | "small" {
+    const cycle = index % 3;
+    return cycle === 0 ? "large" : "small";
+  }
+
   return (
     <>
       <Header />
-      <main className="flex-1">
+      <main className="flex-1 page-enter">
         <section className="bg-white dark:bg-neutral-950 px-4 py-12">
           <div className="max-w-6xl mx-auto">
             {/* Hero */}
@@ -120,7 +134,7 @@ export default async function HomePage({
                 post={{
                   title: heroPost.title,
                   slug: heroPost.slug,
-                  excerpt: heroPost.excerpt,
+                  excerpt: stripMarkdown(heroPost.excerpt),
                   coverImage: heroPost.coverImage,
                   categoryName: heroPost.category.name,
                   categorySlug: heroPost.category.slug,
@@ -136,7 +150,7 @@ export default async function HomePage({
 
             {dbError ? (
               <div className="text-center py-20 text-neutral-400 dark:text-neutral-600">
-                <p className="text-base mb-2">暫時無法載入文章</p>
+                <p className="text-base mb-2 font-serif">暫時無法載入文章</p>
                 <p className="text-xs">請稍後再試</p>
               </div>
             ) : (
@@ -167,24 +181,26 @@ export default async function HomePage({
 
                   {posts.length === 0 ? (
                     <div className="text-center py-20 text-neutral-400 dark:text-neutral-600">
-                      <p className="text-base mb-2">找不到符合條件的文章</p>
+                      <p className="text-base mb-2 font-serif">找不到符合條件的文章</p>
                       <p className="text-xs">試試其他關鍵字或清除篩選</p>
                     </div>
                   ) : (
                     <>
                       <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
-                        {posts.map((post) => (
-                          <PostCard
-                            key={post.id}
-                            title={post.title}
-                            slug={post.slug}
-                            excerpt={post.excerpt}
-                            coverImage={post.coverImage}
-                            categoryName={post.category.name}
-                            categorySlug={post.category.slug}
-                            tags={post.tags}
-                            createdAt={post.createdAt.toISOString()}
-                          />
+                        {posts.map((post, index) => (
+                          <ScrollReveal key={post.id} delay={index * 80}>
+                            <PostCard
+                              title={post.title}
+                              slug={post.slug}
+                              excerpt={post.excerpt}
+                              coverImage={post.coverImage}
+                              categoryName={post.category.name}
+                              categorySlug={post.category.slug}
+                              tags={post.tags}
+                              createdAt={post.createdAt.toISOString()}
+                              variant={getCardVariant(index)}
+                            />
+                          </ScrollReveal>
                         ))}
                       </div>
                       <Suspense fallback={null}>

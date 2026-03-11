@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
+import { stripMarkdown } from "@/lib/utils";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import MarkdownContent from "./markdown-content";
@@ -39,14 +40,16 @@ export async function generateMetadata({
   const ogImage = post.coverImage || DEFAULT_OG_IMAGE;
   const url = `${SITE_URL}/posts/${slug}`;
 
+  const plainExcerpt = stripMarkdown(post.excerpt);
+
   return {
     title: `${post.title} — ${SITE_NAME}`,
-    description: post.excerpt,
+    description: plainExcerpt,
     keywords: post.tags.map((t) => t.name),
     openGraph: {
       type: "article",
       title: post.title,
-      description: post.excerpt,
+      description: plainExcerpt,
       url,
       siteName: SITE_NAME,
       publishedTime: post.createdAt.toISOString(),
@@ -56,7 +59,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: post.title,
-      description: post.excerpt,
+      description: plainExcerpt,
       images: [ogImage],
     },
     alternates: { canonical: url },
@@ -152,11 +155,11 @@ export default async function PostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="flex-1">
+      <main className="flex-1 page-enter">
         <article className="max-w-[680px] mx-auto px-4 py-10 lg:max-w-4xl lg:grid lg:grid-cols-[1fr_180px] lg:gap-8">
           <div>
             {/* 麵包屑 */}
-            <nav className="text-[10px] text-neutral-400 dark:text-neutral-600 mb-8 uppercase tracking-wider">
+            <nav className="text-[10px] text-neutral-400 dark:text-neutral-600 mb-8 uppercase tracking-wider font-display">
               <Link href="/" className="hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors">首頁</Link>
               <span className="mx-2">—</span>
               <Link href={`/?category=${post.category.slug}`} className="hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors">
@@ -168,7 +171,7 @@ export default async function PostPage({
             <header className="mb-10">
               <div className="flex items-center gap-2 mb-4">
                 <Link href={`/?category=${post.category.slug}`}
-                  className="text-[10px] font-medium text-neutral-900 dark:text-neutral-100 uppercase tracking-widest hover:opacity-60 transition-opacity">
+                  className="text-[10px] font-medium text-neutral-900 dark:text-neutral-100 uppercase tracking-widest hover:opacity-60 transition-opacity font-display">
                   {post.category.name}
                 </Link>
                 <span className="w-4 border-t border-neutral-300 dark:border-neutral-700" />
@@ -178,7 +181,7 @@ export default async function PostPage({
                 <span className="w-4 border-t border-neutral-300 dark:border-neutral-700" />
                 <ViewCounter postId={post.id} initialCount={post.viewCount} />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100 leading-snug tracking-tight mb-4">{post.title}</h1>
+              <h1 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100 leading-snug tracking-wide mb-4">{post.title}</h1>
               <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">{post.excerpt}</p>
 
               {/* 字體大小調整 */}
@@ -189,7 +192,7 @@ export default async function PostPage({
 
               {post.coverImage && (
                 <Image src={post.coverImage!} alt={post.title}
-                  width={680} height={400} className="w-full mt-6 object-cover" />
+                  width={960} height={540} className="w-[calc(100%+80px)] -ml-10 mt-6 object-cover" />
               )}
             </header>
 

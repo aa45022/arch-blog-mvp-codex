@@ -1,6 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import ArchPattern from "./arch-pattern";
+import { getArchPatternIndex, stripMarkdown } from "@/lib/utils";
 
 type PostCardProps = {
   title: string;
@@ -11,33 +13,36 @@ type PostCardProps = {
   tags: { name: string; slug: string }[];
   createdAt: string;
   coverImage?: string | null;
+  variant?: "large" | "small";
 };
 
 export default function PostCard({
   title, slug, excerpt, categoryName, categorySlug,
-  tags, createdAt, coverImage,
+  tags, createdAt, coverImage, variant = "small",
 }: PostCardProps) {
   const date = new Date(createdAt).toLocaleDateString("zh-TW", {
     year: "numeric", month: "long", day: "numeric",
   });
 
+  const patternIndex = getArchPatternIndex(slug);
+  const plainExcerpt = stripMarkdown(excerpt);
+  const isLarge = variant === "large";
+
   return (
-    <article className="group cursor-pointer bg-white dark:bg-neutral-950">
-      {/* 封面圖 — 大圖，雜誌感 */}
+    <article className={`group cursor-pointer bg-white dark:bg-neutral-950 ${isLarge ? "sm:col-span-2" : ""}`}>
+      {/* 封面圖 */}
       <Link href={`/posts/${slug}`} className="block overflow-hidden">
-        <div className="relative aspect-[16/10] overflow-hidden">
+        <div className={`relative overflow-hidden ${isLarge ? "aspect-[21/9]" : "aspect-[16/10]"}`}>
           {coverImage ? (
             <Image
               src={coverImage}
               alt={title}
-              width={800}
-              height={500}
+              width={isLarge ? 1200 : 800}
+              height={isLarge ? 514 : 500}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (
-            <div className="w-full h-full bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
-              <span className="text-neutral-300 dark:text-neutral-700 text-xs tracking-wider uppercase">No Image</span>
-            </div>
+            <ArchPattern index={patternIndex} />
           )}
         </div>
       </Link>
@@ -56,20 +61,24 @@ export default function PostCard({
           <time className="text-[10px] text-neutral-400 dark:text-neutral-600">{date}</time>
         </div>
 
-        {/* 標題 */}
+        {/* 標題 — 宋體 */}
         <Link href={`/posts/${slug}`} className="block">
-          <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug mb-2 group-hover:opacity-60 transition-opacity">
+          <h2 className={`font-serif font-bold text-neutral-900 dark:text-neutral-100 tracking-wide leading-snug mb-2 group-hover:opacity-60 transition-opacity ${
+            isLarge ? "text-xl sm:text-2xl" : "text-lg"
+          }`}>
             {title}
           </h2>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
-            {excerpt}
+          <p className={`text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed ${
+            isLarge ? "line-clamp-3" : "line-clamp-2"
+          }`}>
+            {plainExcerpt}
           </p>
         </Link>
 
         {/* Read more */}
         <Link
           href={`/posts/${slug}`}
-          className="inline-flex items-center gap-2 mt-4 text-xs font-medium text-neutral-900 dark:text-neutral-200 hover:opacity-60 transition-opacity uppercase tracking-wider"
+          className="inline-flex items-center gap-2 mt-4 text-xs font-medium text-neutral-900 dark:text-neutral-200 hover:opacity-60 transition-opacity uppercase tracking-wider font-display"
         >
           閱讀全文
           <ArrowRight className="w-3 h-3" />
