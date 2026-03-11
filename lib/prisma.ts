@@ -15,15 +15,11 @@ declare global {
 }
 
 function createPrismaClient(): PrismaClient {
-  // pg.Pool — PrismaPg adapter 需要 Pool 實例
   const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const adapter = new PrismaPg(pool as any);
+  const adapter = new PrismaPg(pool as unknown as ConstructorParameters<typeof PrismaPg>[0]);
   return new PrismaClient({ adapter });
 }
 
-// Dev 模式：存在 globalThis 上避免 hot reload 重複連線
-// Production：每次啟動建立一個實例
 export const prisma: PrismaClient =
   globalThis.prisma ?? createPrismaClient();
 
