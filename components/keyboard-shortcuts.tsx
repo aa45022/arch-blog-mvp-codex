@@ -85,7 +85,8 @@ export default function KeyboardShortcuts() {
       {/* 快捷鍵提示按鈕（右下角，在 back-to-top 上方） */}
       <button
         onClick={() => setShowHelp(!showHelp)}
-        className="fixed bottom-6 left-6 z-40 w-8 h-8 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center text-neutral-400 dark:text-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 hover:border-neutral-900 dark:hover:border-neutral-400 transition-all opacity-40 hover:opacity-100 print:hidden"
+        className="fixed bottom-6 left-6 z-40 w-8 h-8 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-center text-neutral-400 dark:text-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 hover:border-neutral-900 dark:hover:border-neutral-400 transition-all opacity-40 hover:opacity-100"
+        data-print-hide
         title="快捷鍵 (?)"
       >
         <Keyboard className="w-3.5 h-3.5" />
@@ -93,7 +94,7 @@ export default function KeyboardShortcuts() {
 
       {/* 快捷鍵說明面板 */}
       {showHelp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center print:hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center" data-print-hide>
           <div className="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm" onClick={() => setShowHelp(false)} />
           <div className="relative bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-2xl w-full max-w-sm mx-4">
             <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-200 dark:border-neutral-800">

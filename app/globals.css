@@ -231,7 +231,7 @@ html.theme-transition *::after {
   header, footer, nav,
   .reading-progress,
   .back-to-top,
-  .print\\:hidden,
+  [data-print-hide],
   [data-nav-prev], [data-nav-next],
   button {
     display: none !important;
