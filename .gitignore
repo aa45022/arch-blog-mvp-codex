@@ -20,4 +20,3 @@ next-env.d.ts
 
 # 開發文件（不進版控）
 phase2-instructions.md
-proxy.ts
