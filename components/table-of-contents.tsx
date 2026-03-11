@@ -6,7 +6,9 @@ import { List, X } from "lucide-react";
 type TocItem = { id: string; text: string; level: number };
 
 /**
- * 文章目錄 — 灰調高亮
+ * 文章目錄
+ * 桌面版：完整展開，sticky 側邊
+ * 手機版：浮動按鈕 + 收合面板
  */
 export default function TableOfContents() {
   const [items, setItems] = useState<TocItem[]>([]);
@@ -65,13 +67,12 @@ export default function TableOfContents() {
         {open ? <X className="w-4 h-4" /> : <List className="w-4 h-4" />}
       </button>
 
-      {/* 目錄面板 */}
+      {/* 手機版：收合面板 */}
       <nav
-        className={`fixed z-30 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-lg p-4 max-h-[60vh] overflow-y-auto transition-all duration-300
-          ${open ? "bottom-20 right-6 opacity-100" : "bottom-20 right-6 opacity-0 pointer-events-none"}
-          lg:sticky lg:top-24 lg:bottom-auto lg:right-auto lg:opacity-100 lg:pointer-events-auto lg:shadow-none lg:border-0 lg:bg-transparent lg:dark:bg-transparent lg:p-0`}
+        className={`fixed z-30 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-lg p-4 max-h-[60vh] overflow-y-auto transition-all duration-300 lg:hidden
+          ${open ? "bottom-20 right-6 opacity-100" : "bottom-20 right-6 opacity-0 pointer-events-none"}`}
       >
-        <p className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500 mb-2 uppercase tracking-[0.2em]">
+        <p className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500 mb-2 uppercase tracking-[0.2em] font-display">
           目錄
         </p>
         <ul className="space-y-1">
@@ -86,6 +87,31 @@ export default function TableOfContents() {
                   activeId === item.id
                     ? "text-neutral-900 dark:text-neutral-100 font-medium"
                     : "text-neutral-400 dark:text-neutral-600 hover:text-neutral-700 dark:hover:text-neutral-300"
+                }`}
+              >
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* 桌面版：完整展開，不限高度 */}
+      <nav className="hidden lg:block sticky top-24">
+        <p className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500 mb-3 uppercase tracking-[0.2em] font-display">
+          目錄
+        </p>
+        <ul className="space-y-1 border-l border-neutral-200 dark:border-neutral-800">
+          {items.map((item) => (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                className={`block text-xs py-1.5 transition-colors border-l-2 -ml-px ${
+                  item.level === 3 ? "pl-6" : "pl-3"
+                } ${
+                  activeId === item.id
+                    ? "text-neutral-900 dark:text-neutral-100 font-medium border-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-400 dark:text-neutral-600 hover:text-neutral-700 dark:hover:text-neutral-300 border-transparent"
                 }`}
               >
                 {item.text}

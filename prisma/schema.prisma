@@ -32,8 +32,9 @@ model Post {
   content    String    // Markdown 原文
   coverImage String?   // Cloudinary URL（nullable）
   published  Boolean   @default(false)
-  featured   Boolean   @default(false)  // 精選文章（Hero 用）
-  viewCount  Int       @default(0)      // 閱讀數統計
+  featured      Boolean   @default(false)  // 精選文章（Hero 用）
+  excerptRender Boolean   @default(false)  // true=前台摘要渲染 Markdown, false=純文字
+  viewCount     Int       @default(0)      // 閱讀數統計
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 

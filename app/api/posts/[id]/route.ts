@@ -33,7 +33,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, slug: rawSlug, excerpt, content, categoryId, tagIds, coverImage, published, featured } = body;
+    const { title, slug: rawSlug, excerpt, content, categoryId, tagIds, coverImage, published, featured, excerptRender } = body;
 
     if (!title || !rawSlug || !excerpt || !content || !categoryId) {
       return NextResponse.json({ error: "必填欄位不完整" }, { status: 400 });
@@ -78,6 +78,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         coverImage: coverImage || null,
         published: published ?? false,
         featured: featured ?? false,
+        excerptRender: excerptRender ?? false,
         categoryId: Number(categoryId),
         tags: {
           set: [],

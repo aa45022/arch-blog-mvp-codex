@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import KeyboardShortcuts from "@/components/keyboard-shortcuts";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://arch-blog.zeabur.app";
@@ -58,6 +59,7 @@ export default function RootLayout({
       </head>
       <body className="font-sans bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-300 min-h-screen flex flex-col transition-colors">
         {children}
+        <KeyboardShortcuts />
       </body>
     </html>
   );

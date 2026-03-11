@@ -208,3 +208,80 @@ html.theme-transition *::before,
 html.theme-transition *::after {
   transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease !important;
 }
+
+/* ═══════════════════════════════════════════════
+   Prism.js 語法高亮 — 覆蓋為 neutral 色系
+   ═══════════════════════════════════════════════ */
+.prose pre[class*="language-"] {
+  background: #171717 !important;
+  border: 1px solid #262626;
+  border-radius: 0;
+  padding-top: 2rem;
+}
+.dark .prose pre[class*="language-"] {
+  background: #0a0a0a !important;
+  border-color: #1a1a1a;
+}
+
+/* ═══════════════════════════════════════════════
+   列印友善模式
+   ═══════════════════════════════════════════════ */
+@media print {
+  /* 隱藏非內容元素 */
+  header, footer, nav,
+  .reading-progress,
+  .back-to-top,
+  .print\\:hidden,
+  [data-nav-prev], [data-nav-next],
+  button {
+    display: none !important;
+  }
+
+  /* 重設背景和顏色 */
+  body {
+    background: white !important;
+    color: #171717 !important;
+    font-size: 12pt;
+  }
+
+  /* 文章寬度最大化 */
+  article {
+    max-width: 100% !important;
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  /* 側邊目錄隱藏 */
+  aside {
+    display: none !important;
+  }
+
+  /* 圖片不出血 */
+  .prose img {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    break-inside: avoid;
+  }
+
+  /* 標題不孤立在頁尾 */
+  .prose h1, .prose h2, .prose h3 {
+    break-after: avoid;
+  }
+
+  /* 連結顯示 URL */
+  .prose a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #737373;
+  }
+
+  /* 程式碼區塊不截斷 */
+  .prose pre {
+    white-space: pre-wrap;
+    word-break: break-all;
+    border: 1px solid #e5e5e5 !important;
+    background: #fafafa !important;
+    color: #171717 !important;
+  }
+}

@@ -182,7 +182,13 @@ export default async function PostPage({
                 <ViewCounter postId={post.id} initialCount={post.viewCount} />
               </div>
               <h1 className="font-serif text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-neutral-100 leading-snug tracking-wide mb-4">{post.title}</h1>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">{post.excerpt}</p>
+              {post.excerptRender ? (
+                <div className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed prose prose-sm max-w-none">
+                  <MarkdownContent content={post.excerpt} />
+                </div>
+              ) : (
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">{post.excerpt}</p>
+              )}
 
               {/* 字體大小調整 */}
               <div className="flex items-center justify-end mt-6 gap-2">

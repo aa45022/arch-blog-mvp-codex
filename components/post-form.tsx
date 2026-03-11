@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import MarkdownEditor from "@/components/markdown-editor";
 import ImageUploader from "@/components/image-uploader";
 import VersionHistory from "@/components/version-history";
+import ArticlePreview from "@/components/article-preview";
 
 type PostFormProps = { postId?: number };
 type Category = { id: number; name: string; slug: string };
@@ -23,7 +24,9 @@ export default function PostForm({ postId }: PostFormProps) {
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [published, setPublished] = useState(false);
   const [featured, setFeatured] = useState(false);
+  const [excerptRender, setExcerptRender] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(false);
@@ -69,6 +72,7 @@ export default function PostForm({ postId }: PostFormProps) {
           setSelectedTagIds(p.tags.map((t: Tag) => t.id));
           setPublished(p.published);
           setFeatured(p.featured ?? false);
+          setExcerptRender(p.excerptRender ?? false);
           setSlugManuallyEdited(true);
         }
         setLoading(false);
@@ -163,7 +167,7 @@ export default function PostForm({ postId }: PostFormProps) {
 
     try {
       const body = { title, slug: cleanSlug, excerpt, content, coverImage: coverImage || null,
-        categoryId: Number(categoryId), tagIds: selectedTagIds, published, featured };
+        categoryId: Number(categoryId), tagIds: selectedTagIds, published, featured, excerptRender };
       const url = isEdit ? `/api/posts/${postId}` : "/api/posts";
       const method = isEdit ? "PUT" : "POST";
       const res = await fetch(url, {
@@ -270,6 +274,13 @@ export default function PostForm({ postId }: PostFormProps) {
                 <span className="text-sm text-neutral-700 dark:text-neutral-300">⭐ 精選文章（首頁 Hero）</span>
               </label>
             </div>
+            <div>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={excerptRender} onChange={(e) => setExcerptRender(e.target.checked)}
+                  className="accent-neutral-900 dark:accent-neutral-200" />
+                <span className="text-sm text-neutral-700 dark:text-neutral-300">📝 摘要渲染 Markdown</span>
+              </label>
+            </div>
           </div>
         </div>
 
@@ -346,12 +357,28 @@ export default function PostForm({ postId }: PostFormProps) {
             className="bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-sm font-medium px-6 py-2.5 hover:bg-neutral-700 dark:hover:bg-neutral-300 transition-colors disabled:opacity-50 uppercase tracking-wider">
             {saving ? "儲存中..." : isEdit ? "更新文章" : "建立文章"}
           </button>
+          <button type="button" onClick={() => setShowPreview(true)}
+            className="border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 text-sm px-5 py-2.5 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors">
+            👁 預覽文章
+          </button>
           <button type="button" onClick={() => router.push("/admin/posts")}
             className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors">
             取消
           </button>
         </div>
       </form>
+
+      {/* 文章預覽 Overlay */}
+      {showPreview && (
+        <ArticlePreview
+          title={title}
+          excerpt={excerpt}
+          content={content}
+          categoryName={categories.find(c => c.id === categoryId)?.name || ""}
+          coverImage={coverImage}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
     </div>
   );
 }

@@ -22,6 +22,7 @@ export default function PostNavigation({ prev, next }: PostNavigationProps) {
       {prev ? (
         <Link
           href={`/posts/${prev.slug}`}
+          data-nav-prev
           className="group flex items-start gap-2 p-3 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-900 dark:hover:border-neutral-400 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mt-0.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-200 transition-colors flex-shrink-0" />
@@ -39,6 +40,7 @@ export default function PostNavigation({ prev, next }: PostNavigationProps) {
       {next ? (
         <Link
           href={`/posts/${next.slug}`}
+          data-nav-next
           className="group flex items-start gap-2 p-3 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-900 dark:hover:border-neutral-400 transition-colors text-right justify-end"
         >
           <div className="min-w-0">
