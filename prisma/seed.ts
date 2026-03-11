@@ -10,7 +10,7 @@ import pg from "pg";
 import bcrypt from "bcrypt";
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
+const adapter = new PrismaPg(pool as unknown as ConstructorParameters<typeof PrismaPg>[0]);
 const prisma = new PrismaClient({ adapter });
 
 // ─── 分類資料 ───
