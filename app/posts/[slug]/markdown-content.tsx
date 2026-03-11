@@ -2,7 +2,7 @@
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Check, Copy, Link as LinkIcon } from "lucide-react";
 
 /**
@@ -63,7 +63,7 @@ function HeadingWithAnchor({
   id?: string;
 }) {
   const [copied, setCopied] = useState(false);
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
 
   // 從 children 生成 id
   const text = typeof children === "string" ? children : "";
