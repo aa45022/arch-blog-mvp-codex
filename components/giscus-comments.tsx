@@ -13,9 +13,9 @@ import { useEffect, useRef, useState } from "react";
  */
 
 const REPO = "aa45022/arch-blog-mvp";
-const REPO_ID = ""; // 從 giscus.app 取得
+const REPO_ID = "R_kgDORjEpPw"; // 從 giscus.app 取得
 const CATEGORY = "Announcements";
-const CATEGORY_ID = ""; // 從 giscus.app 取得
+const CATEGORY_ID = "DIC_kwDORjEpP84C4Jpn"; // 從 giscus.app 取得
 
 export default function GiscusComments() {
   const containerRef = useRef<HTMLDivElement>(null);
