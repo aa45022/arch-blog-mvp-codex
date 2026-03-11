@@ -9,28 +9,27 @@ export default async function AdminDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // 認證守衛：未登入直接導回登入頁
   const auth = await validateSession();
   if (!auth) redirect("/admin/login");
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex flex-col">
+      <header className="bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/admin/posts" className="text-sm font-bold text-gray-900 dark:text-gray-100">
-              建築學習筆記
+            <Link href="/admin/posts" className="text-sm font-bold text-neutral-900 dark:text-neutral-100 tracking-tight">
+              SITE LAB
             </Link>
-            <span className="text-xs bg-accent text-white px-2 py-0.5 rounded">後台</span>
+            <span className="text-[10px] bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 px-2 py-0.5 uppercase tracking-wider font-medium">後台</span>
           </div>
           <nav className="flex items-center gap-4">
-            <Link href="/admin/posts" className="text-sm text-gray-500 dark:text-gray-400 hover:text-accent transition-colors">
+            <Link href="/admin/posts" className="text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors">
               文章管理
             </Link>
-            <Link href="/admin/categories" className="text-sm text-gray-500 dark:text-gray-400 hover:text-accent transition-colors">
+            <Link href="/admin/categories" className="text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors">
               分類管理
             </Link>
-            <Link href="/" className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">
+            <Link href="/" className="text-xs text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
               前台
             </Link>
             <ThemeToggle />

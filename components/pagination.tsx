@@ -21,11 +21,11 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-10">
+    <div className="flex items-center justify-center gap-2 mt-12">
       <button
         onClick={() => goTo(currentPage - 1)}
         disabled={currentPage === 1}
-        className="border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs px-3 py-1.5 hover:border-accent hover:text-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 text-xs px-3 py-1.5 hover:border-neutral-900 hover:text-neutral-900 dark:hover:border-neutral-400 dark:hover:text-neutral-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
       >
         ← 上一頁
       </button>
@@ -36,8 +36,8 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
           onClick={() => goTo(p)}
           className={`text-xs w-8 h-8 border transition-colors ${
             p === currentPage
-              ? "bg-accent text-white border-accent"
-              : "border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-accent hover:text-accent"
+              ? "bg-neutral-900 text-white border-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:border-neutral-100"
+              : "border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 hover:border-neutral-900 hover:text-neutral-900 dark:hover:border-neutral-400 dark:hover:text-neutral-200"
           }`}
         >
           {p}
@@ -47,7 +47,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       <button
         onClick={() => goTo(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs px-3 py-1.5 hover:border-accent hover:text-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 text-xs px-3 py-1.5 hover:border-neutral-900 hover:text-neutral-900 dark:hover:border-neutral-400 dark:hover:text-neutral-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
       >
         下一頁 →
       </button>

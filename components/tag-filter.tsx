@@ -33,14 +33,14 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
     <div className="space-y-3">
       {/* 分類 */}
       <div>
-        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mr-2">分類</span>
+        <span className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500 mr-3 uppercase tracking-wider">分類</span>
         <div className="inline-flex flex-wrap gap-1.5">
           <Link
             href={buildHref("category", null)}
-            className={`text-xs px-2.5 py-1 rounded border transition-colors ${
+            className={`text-xs px-2.5 py-1 border transition-colors ${
               !activeCategory && !activeTag
-                ? "bg-accent text-white border-accent"
-                : "text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent"
+                ? "bg-neutral-900 text-white border-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:border-neutral-100"
+                : "text-neutral-500 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800 hover:border-neutral-900 hover:text-neutral-900 dark:hover:border-neutral-400 dark:hover:text-neutral-200"
             }`}
           >
             全部
@@ -49,10 +49,10 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
             <Link
               key={cat.slug}
               href={buildHref("category", cat.slug)}
-              className={`text-xs px-2.5 py-1 rounded border transition-colors ${
+              className={`text-xs px-2.5 py-1 border transition-colors ${
                 activeCategory === cat.slug
-                  ? "bg-accent text-white border-accent"
-                  : "text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent"
+                  ? "bg-neutral-900 text-white border-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:border-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400 border-neutral-200 dark:border-neutral-800 hover:border-neutral-900 hover:text-neutral-900 dark:hover:border-neutral-400 dark:hover:text-neutral-200"
               }`}
             >
               {cat.name}
@@ -64,16 +64,16 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
       {/* 標籤 */}
       {tags.length > 0 && (
         <div>
-          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mr-2">標籤</span>
+          <span className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500 mr-3 uppercase tracking-wider">標籤</span>
           <div className="inline-flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <Link
                 key={tag.slug}
                 href={buildHref("tag", tag.slug)}
-                className={`text-xs px-2.5 py-1 rounded border transition-colors ${
+                className={`text-xs px-2.5 py-1 border transition-colors ${
                   activeTag === tag.slug
-                    ? "bg-accent text-white border-accent"
-                    : "text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent"
+                    ? "bg-neutral-900 text-white border-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 dark:border-neutral-100"
+                    : "text-neutral-400 dark:text-neutral-500 border-neutral-200 dark:border-neutral-800 hover:border-neutral-900 hover:text-neutral-900 dark:hover:border-neutral-400 dark:hover:text-neutral-200"
                 }`}
               >
                 {tag.name}
@@ -87,7 +87,7 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
         <div className="pt-1">
           <Link
             href={buildHref("category", null)}
-            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+            className="text-xs text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
           >
             ✕ 清除篩選
           </Link>

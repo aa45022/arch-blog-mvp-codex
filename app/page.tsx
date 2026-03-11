@@ -8,7 +8,7 @@ import Pagination from "@/components/pagination";
 
 export const dynamic = "force-dynamic";
 
-const PER_PAGE = 9;
+const PER_PAGE = 8;
 
 export default async function HomePage({
   searchParams,
@@ -68,45 +68,53 @@ export default async function HomePage({
     <>
       <Header />
       <main className="flex-1">
-        <section className="bg-white dark:bg-gray-950 px-4 py-10">
-          <div className="max-w-6xl mx-auto">
-            <div className="mb-8 text-center">
-              <p className="mb-2 font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">ARCHITECTURE STUDY</p>
-              <h2 className="font-normal text-3xl text-gray-900 dark:text-gray-100 tracking-tight sm:text-4xl">學習筆記</h2>
+        <section className="bg-white dark:bg-neutral-950 px-4 py-12">
+          <div className="max-w-5xl mx-auto">
+            {/* Hero 標題區 */}
+            <div className="mb-12 pb-8 border-b border-neutral-200 dark:border-neutral-800">
+              <p className="text-[10px] font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-[0.25em] mb-3">
+                Architecture Notes
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-tight">
+                學習筆記
+              </h2>
             </div>
 
-            <div className="mb-6 max-w-2xl mx-auto">
+            {/* 搜尋 + 篩選 */}
+            <div className="mb-6 max-w-xl">
               <Suspense fallback={null}><SearchBar /></Suspense>
             </div>
-            <div className="mb-8">
+            <div className="mb-10">
               <Suspense fallback={null}>
                 <TagFilter categories={categories} tags={tags} />
               </Suspense>
             </div>
 
             {dbError ? (
-              <div className="text-center py-16 text-gray-400 dark:text-gray-500">
-                <p className="text-lg mb-2">暫時無法載入文章</p>
-                <p className="text-sm">請稍後再試</p>
+              <div className="text-center py-20 text-neutral-400 dark:text-neutral-600">
+                <p className="text-base mb-2">暫時無法載入文章</p>
+                <p className="text-xs">請稍後再試</p>
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-between mb-4">
-                  {q && <p className="text-sm text-gray-500 dark:text-gray-400">搜尋「{q}」— 共 {totalCount} 篇</p>}
-                  {!q && <p className="text-sm text-gray-400 dark:text-gray-500">共 {totalCount} 篇文章</p>}
+                {/* 統計 */}
+                <div className="flex items-center justify-between mb-6">
+                  {q && <p className="text-xs text-neutral-500 dark:text-neutral-400">搜尋「{q}」— 共 {totalCount} 篇</p>}
+                  {!q && <p className="text-xs text-neutral-400 dark:text-neutral-600">共 {totalCount} 篇文章</p>}
                   {totalPages > 1 && (
-                    <p className="text-xs text-gray-400 dark:text-gray-500">第 {page} / {totalPages} 頁</p>
+                    <p className="text-[10px] text-neutral-400 dark:text-neutral-600">{page} / {totalPages}</p>
                   )}
                 </div>
 
                 {posts.length === 0 ? (
-                  <div className="text-center py-16 text-gray-400 dark:text-gray-500">
-                    <p className="text-lg mb-2">找不到符合條件的文章</p>
-                    <p className="text-sm">試試其他關鍵字或清除篩選</p>
+                  <div className="text-center py-20 text-neutral-400 dark:text-neutral-600">
+                    <p className="text-base mb-2">找不到符合條件的文章</p>
+                    <p className="text-xs">試試其他關鍵字或清除篩選</p>
                   </div>
                 ) : (
                   <>
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {/* 大卡片 grid：1 欄 → 2 欄 */}
+                    <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2">
                       {posts.map((post) => (
                         <PostCard
                           key={post.id}

@@ -10,10 +10,10 @@ const SIZES = [
 ];
 
 /**
- * 字體大小調整 — 切換文章內容的字級
+ * 字體大小調整
  */
 export default function FontSizeAdjuster() {
-  const [sizeIndex, setSizeIndex] = useState(1); // 預設中
+  const [sizeIndex, setSizeIndex] = useState(1);
 
   useEffect(() => {
     const saved = localStorage.getItem("fontSize");
@@ -27,9 +27,7 @@ export default function FontSizeAdjuster() {
     const prose = document.querySelector(".prose");
     if (!prose) return;
 
-    // 移除所有字級 class
     SIZES.forEach((s) => prose.classList.remove(s.value));
-    // 加上當前字級
     prose.classList.add(SIZES[sizeIndex].value);
     localStorage.setItem("fontSize", SIZES[sizeIndex].label);
   }, [sizeIndex]);
@@ -40,18 +38,18 @@ export default function FontSizeAdjuster() {
         onClick={() => setSizeIndex(Math.max(0, sizeIndex - 1))}
         disabled={sizeIndex === 0}
         aria-label="縮小字體"
-        className="w-7 h-7 flex items-center justify-center rounded border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-accent hover:border-accent transition-colors disabled:opacity-30"
+        className="w-7 h-7 flex items-center justify-center border border-neutral-200 dark:border-neutral-800 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 dark:hover:text-neutral-200 dark:hover:border-neutral-400 transition-colors disabled:opacity-30"
       >
         <Minus className="w-3 h-3" />
       </button>
-      <span className="text-[10px] text-gray-400 dark:text-gray-500 w-4 text-center">
+      <span className="text-[10px] text-neutral-400 dark:text-neutral-500 w-4 text-center">
         {SIZES[sizeIndex].label}
       </span>
       <button
         onClick={() => setSizeIndex(Math.min(SIZES.length - 1, sizeIndex + 1))}
         disabled={sizeIndex === SIZES.length - 1}
         aria-label="放大字體"
-        className="w-7 h-7 flex items-center justify-center rounded border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 hover:text-accent hover:border-accent transition-colors disabled:opacity-30"
+        className="w-7 h-7 flex items-center justify-center border border-neutral-200 dark:border-neutral-800 text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 dark:hover:text-neutral-200 dark:hover:border-neutral-400 transition-colors disabled:opacity-30"
       >
         <Plus className="w-3 h-3" />
       </button>

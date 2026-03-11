@@ -63,15 +63,15 @@ export default function CategoriesPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">分類管理</h1>
-        <Link href="/admin/posts" className="text-sm text-gray-500 dark:text-gray-400 hover:text-accent">
+        <h1 className="text-lg font-bold text-neutral-900 dark:text-neutral-100">分類管理</h1>
+        <Link href="/admin/posts" className="text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:text-neutral-100">
           ← 返回文章管理
         </Link>
       </div>
 
       {/* 新增分類 */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 mb-6">
-        <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">新增分類</h2>
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg p-4 mb-6">
+        <h2 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-3">新增分類</h2>
         <div className="flex gap-2">
           <input
             type="text"
@@ -79,12 +79,12 @@ export default function CategoriesPage() {
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="輸入分類名稱"
-            className="flex-1 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent transition-colors"
+            className="flex-1 border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors"
           />
           <button
             onClick={handleAdd}
             disabled={loading || !newName.trim()}
-            className="bg-accent text-white text-sm px-4 py-2 rounded-lg hover:bg-accent-dark transition-colors disabled:opacity-50"
+            className="bg-neutral-900 dark:bg-neutral-100 text-white text-sm px-4 py-2 rounded-lg hover:bg-neutral-900 dark:bg-neutral-100-dark transition-colors disabled:opacity-50"
           >
             {loading ? "新增中..." : "新增"}
           </button>
@@ -94,25 +94,25 @@ export default function CategoriesPage() {
       </div>
 
       {/* 分類列表 */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
+      <div className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg overflow-hidden">
         {categories.length === 0 ? (
-          <p className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">還沒有分類</p>
+          <p className="text-center py-8 text-neutral-400 dark:text-neutral-500 text-sm">還沒有分類</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">名稱</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">Slug</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">文章數</th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">操作</th>
+              <tr className="border-b border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-800/50">
+                <th className="text-left px-4 py-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">名稱</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">Slug</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">文章數</th>
+                <th className="text-right px-4 py-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">操作</th>
               </tr>
             </thead>
             <tbody>
               {categories.map((cat) => (
-                <tr key={cat.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{cat.name}</td>
-                  <td className="px-4 py-3 text-gray-400 dark:text-gray-500 text-xs font-mono">{cat.slug}</td>
-                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{cat._count.posts} 篇</td>
+                <tr key={cat.id} className="border-b border-neutral-100 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-800/50">
+                  <td className="px-4 py-3 font-medium text-neutral-900 dark:text-neutral-100">{cat.name}</td>
+                  <td className="px-4 py-3 text-neutral-400 dark:text-neutral-500 text-xs font-mono">{cat.slug}</td>
+                  <td className="px-4 py-3 text-neutral-500 dark:text-neutral-400">{cat._count.posts} 篇</td>
                   <td className="px-4 py-3 text-right">
                     {cat._count.posts === 0 ? (
                       <button
@@ -122,7 +122,7 @@ export default function CategoriesPage() {
                         刪除
                       </button>
                     ) : (
-                      <span className="text-xs text-gray-300 dark:text-gray-600">不可刪除</span>
+                      <span className="text-xs text-neutral-300 dark:text-neutral-600">不可刪除</span>
                     )}
                   </td>
                 </tr>

@@ -15,19 +15,19 @@ export default function Error({
       <Header />
       <main className="flex-1 flex items-center justify-center py-20">
         <div className="text-center">
-          <p className="text-5xl font-bold text-gray-200 dark:text-gray-700 mb-4">500</p>
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">發生錯誤</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">很抱歉，頁面載入時發生問題。</p>
+          <p className="text-6xl font-bold text-neutral-200 dark:text-neutral-800 mb-4 tracking-tighter">500</p>
+          <h2 className="text-base font-bold text-neutral-900 dark:text-neutral-100 mb-2">發生錯誤</h2>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 mb-8">很抱歉，頁面載入時發生問題。</p>
           <div className="flex items-center justify-center gap-4">
             <button
               onClick={reset}
-              className="text-sm bg-accent text-white px-4 py-2 rounded-lg hover:bg-accent-dark transition-colors"
+              className="text-xs bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 px-5 py-2.5 hover:bg-neutral-700 dark:hover:bg-neutral-300 transition-colors uppercase tracking-wider font-medium"
             >
               重試
             </button>
             <Link
               href="/"
-              className="text-sm text-gray-500 dark:text-gray-400 hover:text-accent transition-colors"
+              className="text-xs text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
             >
               ← 返回首頁
             </Link>

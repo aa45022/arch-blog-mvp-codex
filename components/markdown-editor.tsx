@@ -14,11 +14,11 @@ function renderMarkdown(md: string): string {
     .replace(/^# (.+)$/gm, '<h1 class="text-xl font-bold mt-6 mb-2">$1</h1>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`([^`]+)`/g, '<code class="bg-gray-100 text-red-500 text-xs px-1 rounded">$1</code>')
-    .replace(/^> (.+)$/gm, '<blockquote class="border-l-2 border-gray-300 pl-3 text-gray-500 italic">$1</blockquote>')
+    .replace(/`([^`]+)`/g, '<code class="bg-neutral-100 text-red-500 text-xs px-1 rounded">$1</code>')
+    .replace(/^> (.+)$/gm, '<blockquote class="border-l-2 border-neutral-300 pl-3 text-neutral-500 italic">$1</blockquote>')
     .replace(/^- (.+)$/gm, '<li class="ml-4 list-disc">$1</li>')
     .replace(/^(\d+)\. (.+)$/gm, '<li class="ml-4 list-decimal">$2</li>')
-    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-accent underline" target="_blank">$1</a>')
+    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" class="text-neutral-900 dark:text-neutral-100 underline" target="_blank">$1</a>')
     .replace(/\n\n/g, '</p><p class="mb-3">')
     .replace(/^/, '<p class="mb-3">')
     .replace(/$/, '</p>');
@@ -28,16 +28,16 @@ export default function MarkdownEditor({ value, onChange }: MarkdownEditorProps)
   const [tab, setTab] = useState<"write" | "preview">("write");
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
+    <div className="border border-neutral-200 rounded-lg overflow-hidden">
       {/* Tab 切換 */}
-      <div className="flex border-b border-gray-200 bg-gray-50">
+      <div className="flex border-b border-neutral-200 bg-neutral-50">
         <button
           type="button"
           onClick={() => setTab("write")}
           className={`text-xs px-4 py-2 transition-colors ${
             tab === "write"
-              ? "bg-white text-gray-900 border-b-2 border-accent font-medium"
-              : "text-gray-400 hover:text-gray-600"
+              ? "bg-white text-neutral-900 border-b-2 border-neutral-900 dark:border-neutral-100 font-medium"
+              : "text-neutral-400 hover:text-neutral-600"
           }`}
         >
           ✏️ 編輯
@@ -47,14 +47,14 @@ export default function MarkdownEditor({ value, onChange }: MarkdownEditorProps)
           onClick={() => setTab("preview")}
           className={`text-xs px-4 py-2 transition-colors ${
             tab === "preview"
-              ? "bg-white text-gray-900 border-b-2 border-accent font-medium"
-              : "text-gray-400 hover:text-gray-600"
+              ? "bg-white text-neutral-900 border-b-2 border-neutral-900 dark:border-neutral-100 font-medium"
+              : "text-neutral-400 hover:text-neutral-600"
           }`}
         >
           👁 預覽
         </button>
         <div className="flex-1" />
-        <span className="text-[10px] text-gray-300 px-3 py-2 self-center">
+        <span className="text-[10px] text-neutral-300 px-3 py-2 self-center">
           支援 Markdown 語法
         </span>
       </div>
@@ -65,15 +65,15 @@ export default function MarkdownEditor({ value, onChange }: MarkdownEditorProps)
           onChange={(e) => onChange(e.target.value)}
           placeholder={`## 段落標題\n\n內文段落...\n\n- 清單項目\n\n**粗體** *斜體* \`程式碼\``}
           rows={16}
-          className="w-full px-4 py-3 text-sm font-mono text-gray-800 outline-none resize-y bg-white leading-relaxed"
+          className="w-full px-4 py-3 text-sm font-mono text-neutral-800 outline-none resize-y bg-white leading-relaxed"
         />
       ) : (
         <div
-          className="min-h-[200px] px-4 py-3 text-sm text-gray-700 leading-relaxed bg-white prose max-w-none"
+          className="min-h-[200px] px-4 py-3 text-sm text-neutral-700 leading-relaxed bg-white prose max-w-none"
           dangerouslySetInnerHTML={{
             __html: value
               ? renderMarkdown(value)
-              : '<p class="text-gray-400 italic">尚無內容...</p>',
+              : '<p class="text-neutral-400 italic">尚無內容...</p>',
           }}
         />
       )}

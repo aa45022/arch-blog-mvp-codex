@@ -41,15 +41,15 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
         <button
           type="button"
           onClick={() => setMode("upload")}
-          className={`transition-colors ${mode === "upload" ? "text-accent font-medium" : "text-gray-400 hover:text-gray-600"}`}
+          className={`transition-colors ${mode === "upload" ? "text-neutral-900 dark:text-neutral-100 font-medium" : "text-neutral-400 hover:text-neutral-600"}`}
         >
           📁 上傳圖片
         </button>
-        <span className="text-gray-200">|</span>
+        <span className="text-neutral-200">|</span>
         <button
           type="button"
           onClick={() => setMode("url")}
-          className={`transition-colors ${mode === "url" ? "text-accent font-medium" : "text-gray-400 hover:text-gray-600"}`}
+          className={`transition-colors ${mode === "url" ? "text-neutral-900 dark:text-neutral-100 font-medium" : "text-neutral-400 hover:text-neutral-600"}`}
         >
           🔗 貼上網址
         </button>
@@ -58,7 +58,7 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
       {mode === "upload" ? (
         <div
           onClick={() => fileRef.current?.click()}
-          className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-accent transition-colors group"
+          className="border-2 border-dashed border-neutral-200 rounded-lg p-6 text-center cursor-pointer hover:border-neutral-900 dark:border-neutral-100 transition-colors group"
         >
           <input
             ref={fileRef}
@@ -68,11 +68,11 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
             className="hidden"
           />
           {uploading ? (
-            <p className="text-sm text-gray-400">上傳中...</p>
+            <p className="text-sm text-neutral-400">上傳中...</p>
           ) : (
             <>
               <p className="text-2xl mb-1">🖼️</p>
-              <p className="text-xs text-gray-400 group-hover:text-accent transition-colors">
+              <p className="text-xs text-neutral-400 group-hover:text-neutral-900 dark:text-neutral-100 transition-colors">
                 點擊選擇圖片（JPG / PNG，最大 5MB）
               </p>
             </>
@@ -84,7 +84,7 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="https://example.com/image.jpg"
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent transition-colors"
+          className="w-full border border-neutral-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors"
         />
       )}
 
@@ -98,12 +98,12 @@ export default function ImageUploader({ value, onChange }: ImageUploaderProps) {
             alt="封面圖預覽"
             width={800}
             height={400}
-            className="w-full h-36 object-cover rounded border border-gray-200"
+            className="w-full h-36 object-cover rounded border border-neutral-200"
           />
           <button
             type="button"
             onClick={() => onChange("")}
-            className="absolute top-2 right-2 bg-white/80 text-gray-500 text-xs px-2 py-1 rounded hover:bg-red-50 hover:text-red-500 transition-colors"
+            className="absolute top-2 right-2 bg-white/80 text-neutral-500 text-xs px-2 py-1 rounded hover:bg-red-50 hover:text-red-500 transition-colors"
           >
             移除
           </button>

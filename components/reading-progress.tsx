@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * 閱讀進度條 — 固定在頁面最頂部
+ * 閱讀進度條 — 固定頁面最頂部，灰調
  */
 export default function ReadingProgress() {
   const [progress, setProgress] = useState(0);
@@ -22,9 +22,9 @@ export default function ReadingProgress() {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 h-0.5 bg-gray-200/30 dark:bg-gray-800/30">
+    <div className="fixed top-0 left-0 right-0 z-50 h-0.5 bg-neutral-200/30 dark:bg-neutral-800/30">
       <div
-        className="h-full bg-accent transition-[width] duration-150 ease-out"
+        className="h-full bg-neutral-900 dark:bg-neutral-300 transition-[width] duration-150 ease-out"
         style={{ width: `${progress}%` }}
       />
     </div>

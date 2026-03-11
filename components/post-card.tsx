@@ -22,66 +22,65 @@ export default function PostCard({
   });
 
   return (
-    <article className="cursor-pointer border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 transition-shadow hover:shadow-md dark:hover:shadow-gray-800/50">
-      {/* 封面圖 */}
-      <div className="relative">
-        {coverImage ? (
-          <Image
-            src={coverImage}
-            alt={title}
-            width={800}
-            height={400}
-            className="w-full h-52 object-cover"
-          />
-        ) : (
-          <div className="w-full h-52 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
-            <span className="text-gray-400 dark:text-gray-500 text-xs">無封面圖片</span>
-          </div>
-        )}
-        {/* 分類標籤（疊在圖片上） */}
-        <Link
-          href={`/?category=${categorySlug}`}
-          className="absolute top-0 left-0 bg-white dark:bg-gray-900 px-2 py-0.5 text-[10px] font-medium text-black dark:text-gray-200 uppercase tracking-wider hover:bg-accent hover:text-white transition-colors"
-        >
-          #{categoryName}
-        </Link>
-      </div>
+    <article className="group cursor-pointer bg-white dark:bg-neutral-950">
+      {/* 封面圖 — 大圖，雜誌感 */}
+      <Link href={`/posts/${slug}`} className="block overflow-hidden">
+        <div className="relative aspect-[16/10] overflow-hidden">
+          {coverImage ? (
+            <Image
+              src={coverImage}
+              alt={title}
+              width={800}
+              height={500}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
+              <span className="text-neutral-300 dark:text-neutral-700 text-xs tracking-wider uppercase">No Image</span>
+            </div>
+          )}
+        </div>
+      </Link>
 
       {/* 內容 */}
-      <div className="px-4 py-4">
-        <Link href={`/posts/${slug}`} className="block group">
-          <h2 className="text-base font-normal text-gray-900 dark:text-gray-100 tracking-tight mb-2 group-hover:text-accent transition-colors leading-snug">
+      <div className="pt-4 pb-6">
+        {/* 分類 + 日期 */}
+        <div className="flex items-center gap-2 mb-3">
+          <Link
+            href={`/?category=${categorySlug}`}
+            className="text-[10px] font-medium text-neutral-900 dark:text-neutral-100 uppercase tracking-widest hover:opacity-60 transition-opacity"
+          >
+            {categoryName}
+          </Link>
+          <span className="w-4 border-t border-neutral-300 dark:border-neutral-700" />
+          <time className="text-[10px] text-neutral-400 dark:text-neutral-600">{date}</time>
+        </div>
+
+        {/* 標題 */}
+        <Link href={`/posts/${slug}`} className="block">
+          <h2 className="text-lg font-bold text-neutral-900 dark:text-neutral-100 tracking-tight leading-snug mb-2 group-hover:opacity-60 transition-opacity">
             {title}
           </h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mb-4">
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-2">
             {excerpt}
           </p>
         </Link>
 
-        {/* Read more + 日期 */}
-        <div className="flex items-center justify-between">
-          <Link
-            href={`/posts/${slug}`}
-            className="group relative flex items-center font-medium text-gray-900 dark:text-gray-200 text-xs hover:text-gray-700 dark:hover:text-white transition-colors"
-          >
-            <span className="mr-2 relative flex items-center overflow-hidden border border-gray-200 dark:border-gray-700 p-2 transition-colors duration-300 group-hover:bg-black dark:group-hover:bg-white group-hover:text-white dark:group-hover:text-black">
-              <ArrowRight className="h-3 w-3 translate-x-0 opacity-100 transition-all duration-500 group-hover:translate-x-6 group-hover:opacity-0" />
-              <ArrowRight className="absolute h-3 w-3 -left-3 transition-all duration-500 group-hover:left-2" />
-            </span>
-            閱讀全文
-          </Link>
-          <span className="flex items-center gap-2 text-[10px] text-gray-400 dark:text-gray-500">
-            {date}
-            <span className="w-8 border-t border-gray-300 dark:border-gray-600" />
-          </span>
-        </div>
+        {/* Read more */}
+        <Link
+          href={`/posts/${slug}`}
+          className="inline-flex items-center gap-2 mt-4 text-xs font-medium text-neutral-900 dark:text-neutral-200 hover:opacity-60 transition-opacity uppercase tracking-wider"
+        >
+          閱讀全文
+          <ArrowRight className="w-3 h-3" />
+        </Link>
 
         {/* 標籤 */}
         {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex flex-wrap gap-1.5 mt-4 pt-4 border-t border-neutral-100 dark:border-neutral-800">
             {tags.map((tag) => (
               <Link key={tag.slug} href={`/?tag=${tag.slug}`}
-                className="text-[10px] text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-700 rounded px-2 py-0.5 hover:text-accent hover:border-accent transition-colors">
+                className="text-[10px] text-neutral-400 dark:text-neutral-500 border border-neutral-200 dark:border-neutral-800 px-2 py-0.5 hover:text-neutral-900 hover:border-neutral-900 dark:hover:text-neutral-200 dark:hover:border-neutral-200 transition-colors">
                 {tag.name}
               </Link>
             ))}

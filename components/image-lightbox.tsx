@@ -5,7 +5,6 @@ import { X } from "lucide-react";
 
 /**
  * 圖片燈箱 — 點擊文章內圖片全螢幕檢視
- * 自動監聽 .prose img 的 click 事件
  */
 export default function ImageLightbox() {
   const [src, setSrc] = useState<string | null>(null);
@@ -27,7 +26,6 @@ export default function ImageLightbox() {
     return () => document.removeEventListener("click", handleClick);
   }, []);
 
-  // ESC 關閉
   useEffect(() => {
     if (!src) return;
     function handleKey(e: KeyboardEvent) {
@@ -46,7 +44,7 @@ export default function ImageLightbox() {
     >
       <button
         onClick={close}
-        className="absolute top-4 right-4 w-10 h-10 bg-white/10 backdrop-blur rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+        className="absolute top-4 right-4 w-10 h-10 bg-white/10 backdrop-blur flex items-center justify-center text-white hover:bg-white/20 transition-colors"
         aria-label="關閉"
       >
         <X className="w-5 h-5" />
@@ -54,7 +52,7 @@ export default function ImageLightbox() {
       <img
         src={src}
         alt={alt}
-        className="max-w-full max-h-[90vh] object-contain rounded-lg cursor-default"
+        className="max-w-full max-h-[90vh] object-contain cursor-default"
         onClick={(e) => e.stopPropagation()}
       />
     </div>

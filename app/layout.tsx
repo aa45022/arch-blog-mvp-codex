@@ -2,17 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 /**
- * 全站 Root Layout
- * - 載入 globals.css（Tailwind + @theme + prose）
- * - 設定全站 metadata
- * - 內嵌 script 防止深色模式閃白
+ * SITE LAB 敷地實驗室 — Root Layout
  */
 export const metadata: Metadata = {
   title: {
-    default: "建築學習筆記",
-    template: "%s | 建築學習筆記",
+    default: "SITE LAB 敷地實驗室",
+    template: "%s | SITE LAB",
   },
-  description: "建築師考試與都市設計學習筆記，涵蓋敷地計畫、韌性城市、TOD、綠色基盤等主題。",
+  description: "SITE LAB 敷地實驗室 — 建築師考試與都市設計學習筆記，涵蓋敷地計畫、韌性城市、TOD、綠色基盤等主題。",
 };
 
 // 防止深色模式閃白的 inline script
@@ -35,7 +32,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="bg-white dark:bg-gray-950 text-gray-800 dark:text-gray-200 min-h-screen flex flex-col transition-colors">
+      <body className="bg-white dark:bg-neutral-950 text-neutral-800 dark:text-neutral-300 min-h-screen flex flex-col transition-colors">
         {children}
       </body>
     </html>

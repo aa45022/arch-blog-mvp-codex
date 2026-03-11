@@ -18,17 +18,16 @@ export default function PostNavigation({ prev, next }: PostNavigationProps) {
   if (!prev && !next) return null;
 
   return (
-    <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800 grid grid-cols-2 gap-4">
-      {/* 上一篇 */}
+    <div className="mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-800 grid grid-cols-2 gap-4">
       {prev ? (
         <Link
           href={`/posts/${prev.slug}`}
-          className="group flex items-start gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-accent dark:hover:border-accent transition-colors"
+          className="group flex items-start gap-2 p-3 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-900 dark:hover:border-neutral-400 transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 mt-0.5 text-gray-400 group-hover:text-accent transition-colors flex-shrink-0" />
+          <ArrowLeft className="w-4 h-4 mt-0.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-200 transition-colors flex-shrink-0" />
           <div className="min-w-0">
-            <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-0.5">上一篇</p>
-            <p className="text-xs text-gray-700 dark:text-gray-300 group-hover:text-accent transition-colors truncate">
+            <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mb-0.5">上一篇</p>
+            <p className="text-xs text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors truncate">
               {prev.title}
             </p>
           </div>
@@ -37,19 +36,18 @@ export default function PostNavigation({ prev, next }: PostNavigationProps) {
         <div />
       )}
 
-      {/* 下一篇 */}
       {next ? (
         <Link
           href={`/posts/${next.slug}`}
-          className="group flex items-start gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-800 hover:border-accent dark:hover:border-accent transition-colors text-right justify-end"
+          className="group flex items-start gap-2 p-3 border border-neutral-200 dark:border-neutral-800 hover:border-neutral-900 dark:hover:border-neutral-400 transition-colors text-right justify-end"
         >
           <div className="min-w-0">
-            <p className="text-[10px] text-gray-400 dark:text-gray-500 mb-0.5">下一篇</p>
-            <p className="text-xs text-gray-700 dark:text-gray-300 group-hover:text-accent transition-colors truncate">
+            <p className="text-[10px] text-neutral-400 dark:text-neutral-600 mb-0.5">下一篇</p>
+            <p className="text-xs text-neutral-700 dark:text-neutral-300 group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors truncate">
               {next.title}
             </p>
           </div>
-          <ArrowRight className="w-4 h-4 mt-0.5 text-gray-400 group-hover:text-accent transition-colors flex-shrink-0" />
+          <ArrowRight className="w-4 h-4 mt-0.5 text-neutral-400 group-hover:text-neutral-900 dark:group-hover:text-neutral-200 transition-colors flex-shrink-0" />
         </Link>
       ) : (
         <div />

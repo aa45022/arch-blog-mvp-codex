@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 /**
- * 深色/淺色模式切換按鈕
- * - 儲存偏好到 localStorage
- * - 切換 <html> 的 dark class
+ * 深色/淺色模式切換 — SITE LAB
  */
 export default function ThemeToggle() {
   const [dark, setDark] = useState(false);
@@ -21,7 +19,6 @@ export default function ThemeToggle() {
     const next = !dark;
     setDark(next);
 
-    // 加上過渡動畫 class
     document.documentElement.classList.add("theme-transition");
     setTimeout(() => {
       document.documentElement.classList.remove("theme-transition");
@@ -36,7 +33,6 @@ export default function ThemeToggle() {
     }
   }
 
-  // 避免 SSR hydration 不一致
   if (!mounted) {
     return <div className="w-8 h-8" />;
   }
@@ -45,7 +41,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={dark ? "切換淺色模式" : "切換深色模式"}
-      className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-accent dark:text-gray-400 dark:hover:text-accent transition-colors"
+      className="w-8 h-8 flex items-center justify-center text-neutral-400 hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors"
     >
       {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
     </button>
