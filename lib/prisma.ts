@@ -17,7 +17,8 @@ declare global {
 function createPrismaClient(): PrismaClient {
   // pg.Pool — PrismaPg adapter 需要 Pool 實例
   const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
-  const adapter = new PrismaPg(pool);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const adapter = new PrismaPg(pool as any);
   return new PrismaClient({ adapter });
 }
 
