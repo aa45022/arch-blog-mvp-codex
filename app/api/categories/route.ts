@@ -32,11 +32,7 @@ export async function POST(request: Request) {
     // 自動產生 slug
     const slug = name
       .toLowerCase()
-      .replace(/[\u4e00-\u9fff]/g, (char: string) => {
-        const pinyin: Record<string, string> = {};
-        return pinyin[char] || char;
-      })
-      .replace(/[^a-z0-9\u4e00-\u9fff]+/g, "-")
+      .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "") || `category-${Date.now()}`;
 
     const existing = await prisma.category.findFirst({
