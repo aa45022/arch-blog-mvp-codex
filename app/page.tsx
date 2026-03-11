@@ -68,11 +68,11 @@ export default async function HomePage({
     <>
       <Header />
       <main className="flex-1">
-        <section className="bg-white px-4 py-10">
+        <section className="bg-white dark:bg-gray-950 px-4 py-10">
           <div className="max-w-6xl mx-auto">
             <div className="mb-8 text-center">
-              <p className="mb-2 font-medium text-gray-500 text-xs uppercase tracking-wider">ARCHITECTURE STUDY</p>
-              <h2 className="font-normal text-3xl text-gray-900 tracking-tight sm:text-4xl">學習筆記</h2>
+              <p className="mb-2 font-medium text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wider">ARCHITECTURE STUDY</p>
+              <h2 className="font-normal text-3xl text-gray-900 dark:text-gray-100 tracking-tight sm:text-4xl">學習筆記</h2>
             </div>
 
             <div className="mb-6 max-w-2xl mx-auto">
@@ -85,22 +85,22 @@ export default async function HomePage({
             </div>
 
             {dbError ? (
-              <div className="text-center py-16 text-gray-400">
+              <div className="text-center py-16 text-gray-400 dark:text-gray-500">
                 <p className="text-lg mb-2">暫時無法載入文章</p>
                 <p className="text-sm">請稍後再試</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-4">
-                  {q && <p className="text-sm text-gray-500">搜尋「{q}」— 共 {totalCount} 篇</p>}
-                  {!q && <p className="text-sm text-gray-400">共 {totalCount} 篇文章</p>}
+                  {q && <p className="text-sm text-gray-500 dark:text-gray-400">搜尋「{q}」— 共 {totalCount} 篇</p>}
+                  {!q && <p className="text-sm text-gray-400 dark:text-gray-500">共 {totalCount} 篇文章</p>}
                   {totalPages > 1 && (
-                    <p className="text-xs text-gray-400">第 {page} / {totalPages} 頁</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">第 {page} / {totalPages} 頁</p>
                   )}
                 </div>
 
                 {posts.length === 0 ? (
-                  <div className="text-center py-16 text-gray-400">
+                  <div className="text-center py-16 text-gray-400 dark:text-gray-500">
                     <p className="text-lg mb-2">找不到符合條件的文章</p>
                     <p className="text-sm">試試其他關鍵字或清除篩選</p>
                   </div>

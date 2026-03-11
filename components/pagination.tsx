@@ -25,7 +25,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       <button
         onClick={() => goTo(currentPage - 1)}
         disabled={currentPage === 1}
-        className="border border-gray-200 text-gray-500 text-xs px-3 py-1.5 hover:border-accent hover:text-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs px-3 py-1.5 hover:border-accent hover:text-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
       >
         ← 上一頁
       </button>
@@ -37,7 +37,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
           className={`text-xs w-8 h-8 border transition-colors ${
             p === currentPage
               ? "bg-accent text-white border-accent"
-              : "border-gray-200 text-gray-500 hover:border-accent hover:text-accent"
+              : "border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-accent hover:text-accent"
           }`}
         >
           {p}
@@ -47,7 +47,7 @@ export default function Pagination({ currentPage, totalPages }: PaginationProps)
       <button
         onClick={() => goTo(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="border border-gray-200 text-gray-500 text-xs px-3 py-1.5 hover:border-accent hover:text-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs px-3 py-1.5 hover:border-accent hover:text-accent transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
       >
         下一頁 →
       </button>

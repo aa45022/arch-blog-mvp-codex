@@ -4,9 +4,6 @@ import Link from "next/link";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
-/**
- * 全站錯誤邊界 — 顯示友善錯誤頁，保留網站框架
- */
 export default function Error({
   reset,
 }: {
@@ -18,9 +15,9 @@ export default function Error({
       <Header />
       <main className="flex-1 flex items-center justify-center py-20">
         <div className="text-center">
-          <p className="text-5xl font-bold text-gray-200 mb-4">500</p>
-          <h2 className="text-lg font-bold text-gray-900 mb-2">發生錯誤</h2>
-          <p className="text-sm text-gray-500 mb-6">很抱歉，頁面載入時發生問題。</p>
+          <p className="text-5xl font-bold text-gray-200 dark:text-gray-700 mb-4">500</p>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">發生錯誤</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">很抱歉，頁面載入時發生問題。</p>
           <div className="flex items-center justify-center gap-4">
             <button
               onClick={reset}
@@ -30,7 +27,7 @@ export default function Error({
             </button>
             <Link
               href="/"
-              className="text-sm text-gray-500 hover:text-accent transition-colors"
+              className="text-sm text-gray-500 dark:text-gray-400 hover:text-accent transition-colors"
             >
               ← 返回首頁
             </Link>

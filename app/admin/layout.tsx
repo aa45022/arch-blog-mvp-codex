@@ -1,9 +1,9 @@
 import Link from "next/link";
 import LogoutButton from "@/components/logout-button";
+import ThemeToggle from "@/components/theme-toggle";
 
 /**
  * Admin Layout — 後台共用外框
- * Server Component，登出按鈕為獨立 Client Component
  */
 export default function AdminLayout({
   children,
@@ -11,15 +11,15 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
       {/* 後台導覽列 */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           {/* 左側 */}
           <div className="flex items-center gap-3">
             <Link
               href="/admin/posts"
-              className="text-sm font-bold text-gray-900"
+              className="text-sm font-bold text-gray-900 dark:text-gray-100"
             >
               建築學習筆記
             </Link>
@@ -32,16 +32,17 @@ export default function AdminLayout({
           <nav className="flex items-center gap-4">
             <Link
               href="/admin/posts"
-              className="text-sm text-gray-500 hover:text-accent transition-colors"
+              className="text-sm text-gray-500 dark:text-gray-400 hover:text-accent transition-colors"
             >
               文章管理
             </Link>
             <Link
               href="/"
-              className="text-sm text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-sm text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
             >
               前台
             </Link>
+            <ThemeToggle />
             <LogoutButton />
           </nav>
         </div>

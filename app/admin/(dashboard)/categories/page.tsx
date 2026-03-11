@@ -63,15 +63,15 @@ export default function CategoriesPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-lg font-bold text-gray-900">分類管理</h1>
-        <Link href="/admin/posts" className="text-sm text-gray-500 hover:text-accent">
+        <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">分類管理</h1>
+        <Link href="/admin/posts" className="text-sm text-gray-500 dark:text-gray-400 hover:text-accent">
           ← 返回文章管理
         </Link>
       </div>
 
       {/* 新增分類 */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
-        <h2 className="text-sm font-medium text-gray-700 mb-3">新增分類</h2>
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 mb-6">
+        <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">新增分類</h2>
         <div className="flex gap-2">
           <input
             type="text"
@@ -79,7 +79,7 @@ export default function CategoriesPage() {
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleAdd()}
             placeholder="輸入分類名稱"
-            className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent transition-colors"
+            className="flex-1 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent transition-colors"
           />
           <button
             onClick={handleAdd}
@@ -90,39 +90,39 @@ export default function CategoriesPage() {
           </button>
         </div>
         {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
-        {success && <p className="text-xs text-green-600 mt-2">{success}</p>}
+        {success && <p className="text-xs text-green-600 dark:text-green-400 mt-2">{success}</p>}
       </div>
 
       {/* 分類列表 */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
         {categories.length === 0 ? (
-          <p className="text-center py-8 text-gray-400 text-sm">還沒有分類</p>
+          <p className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">還沒有分類</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500">名稱</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500">Slug</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500">文章數</th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500">操作</th>
+              <tr className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">名稱</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">Slug</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">文章數</th>
+                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 dark:text-gray-400">操作</th>
               </tr>
             </thead>
             <tbody>
               {categories.map((cat) => (
-                <tr key={cat.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-gray-900">{cat.name}</td>
-                  <td className="px-4 py-3 text-gray-400 text-xs font-mono">{cat.slug}</td>
-                  <td className="px-4 py-3 text-gray-500">{cat._count.posts} 篇</td>
+                <tr key={cat.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                  <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">{cat.name}</td>
+                  <td className="px-4 py-3 text-gray-400 dark:text-gray-500 text-xs font-mono">{cat.slug}</td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{cat._count.posts} 篇</td>
                   <td className="px-4 py-3 text-right">
                     {cat._count.posts === 0 ? (
                       <button
                         onClick={() => handleDelete(cat.id, cat.name)}
-                        className="text-xs text-red-400 hover:text-red-600 transition-colors"
+                        className="text-xs text-red-400 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors"
                       >
                         刪除
                       </button>
                     ) : (
-                      <span className="text-xs text-gray-300">不可刪除</span>
+                      <span className="text-xs text-gray-300 dark:text-gray-600">不可刪除</span>
                     )}
                   </td>
                 </tr>

@@ -5,7 +5,6 @@ import { useState } from "react";
 
 /**
  * 搜尋列 — 搜尋 title + excerpt
- * Client Component，透過 URL search params 傳遞搜尋條件
  */
 export default function SearchBar() {
   const router = useRouter();
@@ -22,9 +21,7 @@ export default function SearchBar() {
       params.delete("q");
     }
 
-    // 搜尋時清除分頁（未來擴充用）
     params.delete("page");
-
     router.push(`/?${params.toString()}`);
   }
 
@@ -43,13 +40,13 @@ export default function SearchBar() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="搜尋文章..."
-          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent transition-colors"
+          className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-accent transition-colors placeholder:text-gray-400 dark:placeholder:text-gray-500"
         />
         {query && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 text-sm"
           >
             ✕
           </button>

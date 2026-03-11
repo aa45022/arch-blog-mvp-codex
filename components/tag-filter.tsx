@@ -3,10 +3,6 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-/**
- * 分類 + 標籤篩選
- * Client Component（需要讀取 URL search params 來標示 active 狀態）
- */
 type TagFilterProps = {
   categories: { name: string; slug: string }[];
   tags: { name: string; slug: string }[];
@@ -17,9 +13,6 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
   const activeCategory = searchParams.get("category");
   const activeTag = searchParams.get("tag");
 
-  /**
-   * 組合 URL params — 保留搜尋條件，切換篩選
-   */
   function buildHref(key: string, value: string | null): string {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -29,7 +22,6 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
       params.set(key, value);
     }
 
-    // 切換分類時清除標籤，反之亦然
     if (key === "category") params.delete("tag");
     if (key === "tag") params.delete("category");
 
@@ -41,14 +33,14 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
     <div className="space-y-3">
       {/* 分類 */}
       <div>
-        <span className="text-xs font-medium text-gray-500 mr-2">分類</span>
+        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mr-2">分類</span>
         <div className="inline-flex flex-wrap gap-1.5">
           <Link
             href={buildHref("category", null)}
             className={`text-xs px-2.5 py-1 rounded border transition-colors ${
               !activeCategory && !activeTag
                 ? "bg-accent text-white border-accent"
-                : "text-gray-500 border-gray-200 hover:border-accent hover:text-accent"
+                : "text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent"
             }`}
           >
             全部
@@ -60,7 +52,7 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
               className={`text-xs px-2.5 py-1 rounded border transition-colors ${
                 activeCategory === cat.slug
                   ? "bg-accent text-white border-accent"
-                  : "text-gray-500 border-gray-200 hover:border-accent hover:text-accent"
+                  : "text-gray-500 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent"
               }`}
             >
               {cat.name}
@@ -72,7 +64,7 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
       {/* 標籤 */}
       {tags.length > 0 && (
         <div>
-          <span className="text-xs font-medium text-gray-500 mr-2">標籤</span>
+          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mr-2">標籤</span>
           <div className="inline-flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <Link
@@ -81,7 +73,7 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
                 className={`text-xs px-2.5 py-1 rounded border transition-colors ${
                   activeTag === tag.slug
                     ? "bg-accent text-white border-accent"
-                    : "text-gray-400 border-gray-200 hover:border-accent hover:text-accent"
+                    : "text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700 hover:border-accent hover:text-accent"
                 }`}
               >
                 {tag.name}
@@ -91,12 +83,11 @@ export default function TagFilter({ categories, tags }: TagFilterProps) {
         </div>
       )}
 
-      {/* Active filter badge — 有篩選時顯示清除按鈕 */}
       {(activeCategory || activeTag) && (
         <div className="pt-1">
           <Link
             href={buildHref("category", null)}
-            className="text-xs text-red-500 hover:text-red-700"
+            className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
           >
             ✕ 清除篩選
           </Link>

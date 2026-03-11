@@ -79,14 +79,14 @@ export default async function PostPage({
       <main className="flex-1">
         <article className="max-w-[680px] mx-auto px-4 py-8">
           {/* 麵包屑 */}
-          <nav className="text-xs text-gray-400 mb-6">
+          <nav className="text-xs text-gray-400 dark:text-gray-500 mb-6">
             <Link href="/" className="hover:text-accent">首頁</Link>
             <span className="mx-1.5">›</span>
             <Link href={`/?category=${post.category.slug}`} className="hover:text-accent">
               {post.category.name}
             </Link>
             <span className="mx-1.5">›</span>
-            <span className="text-gray-500">{post.title}</span>
+            <span className="text-gray-500 dark:text-gray-400">{post.title}</span>
           </nav>
 
           {/* 文章標頭 */}
@@ -96,11 +96,11 @@ export default async function PostPage({
                 className="text-xs font-medium text-accent hover:text-accent-dark">
                 {post.category.name}
               </Link>
-              <span className="text-xs text-gray-300">·</span>
-              <time className="text-xs text-gray-400">{date}</time>
+              <span className="text-xs text-gray-300 dark:text-gray-600">·</span>
+              <time className="text-xs text-gray-400 dark:text-gray-500">{date}</time>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 leading-snug mb-4">{post.title}</h1>
-            <p className="text-sm text-gray-500 leading-relaxed">{post.excerpt}</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 leading-snug mb-4">{post.title}</h1>
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{post.excerpt}</p>
             {post.coverImage && (
               <Image src={post.coverImage!} alt={post.title}
                 width={680} height={400} className="w-full rounded-lg mt-6 object-cover" />
@@ -108,16 +108,16 @@ export default async function PostPage({
           </header>
 
           {/* 內容 */}
-          <div className="prose text-gray-800">
+          <div className="prose text-gray-800 dark:text-gray-300">
             <MarkdownContent content={post.content} />
           </div>
 
           {/* 標籤 */}
           {post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-8 pt-6 border-t border-gray-200">
+            <div className="flex flex-wrap gap-1.5 mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
               {post.tags.map((tag) => (
                 <Link key={tag.slug} href={`/?tag=${tag.slug}`}
-                  className="text-xs text-gray-400 border border-gray-200 rounded px-2.5 py-1 hover:text-accent hover:border-accent transition-colors">
+                  className="text-xs text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-700 rounded px-2.5 py-1 hover:text-accent hover:border-accent transition-colors">
                   #{tag.name}
                 </Link>
               ))}
