@@ -55,6 +55,22 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "此網址代稱已被使用" }, { status: 400 });
     }
 
+    // 自動保存版本歷史（更新前快照）
+    const currentPost = await prisma.post.findUnique({
+      where: { id: Number(id) },
+      select: { title: true, content: true, excerpt: true },
+    });
+    if (currentPost) {
+      await prisma.postVersion.create({
+        data: {
+          postId: Number(id),
+          title: currentPost.title,
+          content: currentPost.content,
+          excerpt: currentPost.excerpt,
+        },
+      });
+    }
+
     const post = await prisma.post.update({
       where: { id: Number(id) },
       data: {

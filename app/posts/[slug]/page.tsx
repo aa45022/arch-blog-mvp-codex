@@ -14,6 +14,7 @@ import FontSizeAdjuster from "@/components/font-size-adjuster";
 import PostNavigation from "@/components/post-navigation";
 import RelatedPosts from "@/components/related-posts";
 import ViewCounter from "@/components/view-counter";
+import ShareButtons from "@/components/share-buttons";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://arch-blog.zeabur.app";
 const SITE_NAME = "SITE LAB 敷地實驗室";
@@ -197,17 +198,23 @@ export default async function PostPage({
               <MarkdownContent content={post.content} />
             </div>
 
-            {/* 標籤 */}
-            {post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-800">
-                {post.tags.map((tag) => (
-                  <Link key={tag.slug} href={`/?tag=${tag.slug}`}
-                    className="text-[10px] text-neutral-400 dark:text-neutral-500 border border-neutral-200 dark:border-neutral-800 px-2.5 py-1 hover:text-neutral-900 hover:border-neutral-900 dark:hover:text-neutral-200 dark:hover:border-neutral-400 transition-colors">
-                    #{tag.name}
-                  </Link>
-                ))}
-              </div>
-            )}
+            {/* 標籤 + 分享 */}
+            <div className="mt-10 pt-6 border-t border-neutral-200 dark:border-neutral-800">
+              {post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-6">
+                  {post.tags.map((tag) => (
+                    <Link key={tag.slug} href={`/?tag=${tag.slug}`}
+                      className="text-[10px] text-neutral-400 dark:text-neutral-500 border border-neutral-200 dark:border-neutral-800 px-2.5 py-1 hover:text-neutral-900 hover:border-neutral-900 dark:hover:text-neutral-200 dark:hover:border-neutral-400 transition-colors">
+                      #{tag.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              <ShareButtons
+                url={`${SITE_URL}/posts/${slug}`}
+                title={post.title}
+              />
+            </div>
 
             {/* 上一篇 / 下一篇 */}
             <PostNavigation prev={prevPost} next={nextPost} />

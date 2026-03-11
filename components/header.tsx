@@ -1,9 +1,10 @@
 import Link from "next/link";
 import ThemeToggle from "./theme-toggle";
+import HeaderSearch from "./header-search";
 import { Rss } from "lucide-react";
 
 /**
- * SITE LAB 頂部導覽列 — 含時事專欄 + RSS
+ * SITE LAB 頂部導覽列 — 含時事專欄 + 搜尋 + RSS
  */
 export default function Header() {
   return (
@@ -33,6 +34,7 @@ export default function Header() {
           >
             時事
           </Link>
+          <HeaderSearch />
           <Link
             href="/feed.xml"
             className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"

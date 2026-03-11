@@ -40,6 +40,7 @@ model Post {
   categoryId Int
   category   Category  @relation(fields: [categoryId], references: [id])
   tags       Tag[]     // 隱式多對多（Prisma 自動建 _PostToTag 中間表）
+  versions   PostVersion[]
 }
 
 // ─── 分類 ───
@@ -65,4 +66,18 @@ model Session {
   expiresAt   DateTime
   adminUserId Int
   adminUser   AdminUser @relation(fields: [adminUserId], references: [id])
+}
+
+// ─── 文章版本歷史 ───
+model PostVersion {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  title     String
+  content   String   // Markdown 原文快照
+  excerpt   String
+  note      String?  // 版本備註（選填）
+  createdAt DateTime @default(now())
+
+  @@index([postId, createdAt(sort: Desc)])
 }

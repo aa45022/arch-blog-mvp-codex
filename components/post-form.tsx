@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import MarkdownEditor from "@/components/markdown-editor";
 import ImageUploader from "@/components/image-uploader";
+import VersionHistory from "@/components/version-history";
 
 type PostFormProps = { postId?: number };
 type Category = { id: number; name: string; slug: string };
@@ -34,6 +35,12 @@ export default function PostForm({ postId }: PostFormProps) {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [addingCategory, setAddingCategory] = useState(false);
   const [categoryError, setCategoryError] = useState("");
+
+  // 快速新增標籤
+  const [showAddTag, setShowAddTag] = useState(false);
+  const [newTagName, setNewTagName] = useState("");
+  const [addingTag, setAddingTag] = useState(false);
+  const [tagError, setTagError] = useState("");
 
   async function loadOptions() {
     const [catRes, tagRes] = await Promise.all([
@@ -89,7 +96,6 @@ export default function PostForm({ postId }: PostFormProps) {
   }
 
   function handleSlugBlur() {
-    // 使用者離開 slug 欄位時，自動修正格式
     setSlug(generateSlug(slug));
   }
 
@@ -119,6 +125,29 @@ export default function PostForm({ postId }: PostFormProps) {
       setShowAddCategory(false);
     }
     setAddingCategory(false);
+  }
+
+  async function handleAddTag() {
+    if (!newTagName.trim()) return;
+    setTagError(""); setAddingTag(true);
+
+    const res = await fetch("/api/tags", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: newTagName.trim() }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      setTagError(data.error || "新增失敗");
+    } else {
+      await loadOptions();
+      // 自動勾選新建的標籤
+      setSelectedTagIds((prev) => [...prev, data.data.id]);
+      setNewTagName("");
+      setShowAddTag(false);
+    }
+    setAddingTag(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -247,7 +276,32 @@ export default function PostForm({ postId }: PostFormProps) {
 
         {/* 標籤 */}
         <div>
-          <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1.5">標籤</label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-medium text-neutral-500 dark:text-neutral-400">標籤</label>
+            <button type="button" onClick={() => { setShowAddTag(!showAddTag); setTagError(""); }}
+              className="text-xs text-neutral-900 dark:text-neutral-100 hover:opacity-60 transition-opacity">
+              {showAddTag ? "取消" : "+ 新增標籤"}
+            </button>
+          </div>
+
+          {/* 新增標籤表單 */}
+          {showAddTag && (
+            <div className="mb-2 space-y-1">
+              <div className="flex gap-1">
+                <input type="text" value={newTagName}
+                  onChange={(e) => setNewTagName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
+                  placeholder="新標籤名稱"
+                  className="flex-1 border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-neutral-900 dark:focus:border-neutral-400 transition-colors" />
+                <button type="button" onClick={handleAddTag} disabled={addingTag}
+                  className="bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 text-xs px-3 py-2 hover:bg-neutral-700 dark:hover:bg-neutral-300 disabled:opacity-50">
+                  {addingTag ? "..." : "新增"}
+                </button>
+              </div>
+              {tagError && <p className="text-xs text-red-500">{tagError}</p>}
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-1.5">
             {tags.map((tag) => (
               <button key={tag.id} type="button" onClick={() => toggleTag(tag.id)}
@@ -273,6 +327,18 @@ export default function PostForm({ postId }: PostFormProps) {
           <label className="block text-xs font-medium text-neutral-500 dark:text-neutral-400 mb-1.5">內容 <span className="text-red-400">*</span></label>
           <MarkdownEditor value={content} onChange={setContent} />
         </div>
+
+        {/* 版本歷史（僅編輯模式顯示） */}
+        {isEdit && postId && (
+          <VersionHistory
+            postId={postId}
+            onRestore={(version) => {
+              setTitle(version.title);
+              setContent(version.content);
+              setExcerpt(version.excerpt);
+            }}
+          />
+        )}
 
         {error && <p className="text-xs text-red-500 bg-red-50 dark:bg-red-900/20 px-3 py-2">{error}</p>}
 
