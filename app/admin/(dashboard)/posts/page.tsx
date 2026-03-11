@@ -5,7 +5,7 @@ import PostActions from "@/components/post-actions";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPostsPage() {
-  let posts: Awaited<ReturnType<typeof prisma.post.findMany>> = [];
+  let posts: Awaited<ReturnType<typeof prisma.post.findMany<{ include: { category: { select: { name: true } } } }>>> = [];
   let dbError = false;
 
   try {
