@@ -7,6 +7,7 @@
 import { PrismaClient } from "../prisma/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import { getDatabaseUrl } from "./db-url.js";
 
 // 宣告 global 型別，讓 TypeScript 認識 globalThis.prisma
 declare global {
@@ -15,7 +16,7 @@ declare global {
 }
 
 function createPrismaClient(): PrismaClient {
-  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+  const pool = new pg.Pool({ connectionString: getDatabaseUrl() });
   const adapter = new PrismaPg(pool as unknown as ConstructorParameters<typeof PrismaPg>[0]);
   return new PrismaClient({ adapter });
 }

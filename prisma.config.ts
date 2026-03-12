@@ -6,14 +6,15 @@
  */
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
+import { getDatabaseUrl } from "./lib/db-url.js";
 
 export default defineConfig({
   // schema 檔案位置
   schema: "prisma/schema.prisma",
 
-  // 資料庫連線 — 不用 env() helper、不用空字串 fallback
+  // 資料庫連線 — 相容 Zeabur 自動注入的各種環境變數
   datasource: {
-    url: process.env.DATABASE_URL!,
+    url: getDatabaseUrl(),
   },
 
   // Seed 指令
