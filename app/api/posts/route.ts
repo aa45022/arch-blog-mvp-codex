@@ -18,8 +18,13 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json({ data: posts });
-  } catch {
-    return NextResponse.json({ error: "讀取文章失敗" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "讀取文章失敗";
+    // 無資料庫時先回空資料，避免管理後台整頁中斷
+    if (message.includes("Missing database connection string")) {
+      return NextResponse.json({ data: [], warning: message });
+    }
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
