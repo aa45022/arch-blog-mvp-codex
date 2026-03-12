@@ -9,13 +9,26 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 
 // 宣告 global 型別，讓 TypeScript 認識 globalThis.prisma
+function resolveDatabaseUrl(): string {
+  const url = process.env.DATABASE_URL
+    || process.env.POSTGRES_PRISMA_URL
+    || process.env.POSTGRES_URL
+    || process.env.PG_URL;
+
+  if (!url) {
+    throw new Error("Missing database connection string. Set DATABASE_URL (preferred) or POSTGRES_PRISMA_URL/POSTGRES_URL/PG_URL.");
+  }
+
+  return url;
+}
+
 declare global {
   // eslint-disable-next-line no-var
   var prisma: PrismaClient | undefined;
 }
 
 function createPrismaClient(): PrismaClient {
-  const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+  const pool = new pg.Pool({ connectionString: resolveDatabaseUrl() });
   const adapter = new PrismaPg(pool as unknown as ConstructorParameters<typeof PrismaPg>[0]);
   return new PrismaClient({ adapter });
 }

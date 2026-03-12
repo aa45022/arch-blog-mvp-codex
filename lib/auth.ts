@@ -1,6 +1,10 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 
+export function isAdminAuthDisabled(): boolean {
+  return process.env.ADMIN_AUTH_DISABLED !== "false";
+}
+
 /**
  * 認證工具 — Session 真驗證 + Origin 檢查
  *
@@ -14,6 +18,14 @@ import { prisma } from "@/lib/prisma";
  * @returns { adminUser, session } | null
  */
 export async function validateSession() {
+  const authDisabled = isAdminAuthDisabled();
+  if (authDisabled) {
+    return {
+      adminUser: { id: 0, email: "dev@local" },
+      session: { id: 0, token: "auth-disabled", expiresAt: new Date(Date.now() + 86400 * 1000), adminUserId: 0 },
+    };
+  }
+
   const cookieStore = await cookies();
   const token = cookieStore.get("session_token")?.value;
 
@@ -47,17 +59,31 @@ export async function validateSession() {
  * @returns true = 通過 / false = 不符（回 403）
  */
 export function checkOrigin(request: Request): boolean {
-  const origin = request.headers.get("origin");
-  const appUrl = process.env.APP_URL;
+  if (isAdminAuthDisabled()) return true;
 
-  // 沒設 APP_URL → 開發模式，放行
-  if (!appUrl) return true;
+  const origin = request.headers.get("origin");
 
   // 沒有 Origin header（例如 same-origin GET）→ 放行
   if (!origin) return true;
 
-  // 比對 Origin
-  return origin === appUrl;
+  const requestOrigin = new URL(request.url).origin;
+
+  const allowedOrigins = [
+    requestOrigin,
+    process.env.APP_URL,
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.ZEABUR_URL ? `https://${process.env.ZEABUR_URL}` : undefined,
+  ]
+    .filter(Boolean)
+    .map((value) => {
+      try {
+        return new URL(String(value)).origin;
+      } catch {
+        return String(value).replace(/\/$/, "");
+      }
+    });
+
+  return allowedOrigins.includes(origin);
 }
 
 /**
