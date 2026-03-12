@@ -14,6 +14,14 @@ import { prisma } from "@/lib/prisma";
  * @returns { adminUser, session } | null
  */
 export async function validateSession() {
+  const authDisabled = process.env.ADMIN_AUTH_DISABLED !== "false";
+  if (authDisabled) {
+    return {
+      adminUser: { id: 0, email: "dev@local" },
+      session: { id: 0, token: "auth-disabled", expiresAt: new Date(Date.now() + 86400 * 1000), adminUserId: 0 },
+    };
+  }
+
   const cookieStore = await cookies();
   const token = cookieStore.get("session_token")?.value;
 
@@ -48,16 +56,28 @@ export async function validateSession() {
  */
 export function checkOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
-  const appUrl = process.env.APP_URL;
-
-  // 沒設 APP_URL → 開發模式，放行
-  if (!appUrl) return true;
 
   // 沒有 Origin header（例如 same-origin GET）→ 放行
   if (!origin) return true;
 
-  // 比對 Origin
-  return origin === appUrl;
+  const requestOrigin = new URL(request.url).origin;
+
+  const allowedOrigins = [
+    requestOrigin,
+    process.env.APP_URL,
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.ZEABUR_URL ? `https://${process.env.ZEABUR_URL}` : undefined,
+  ]
+    .filter(Boolean)
+    .map((value) => {
+      try {
+        return new URL(String(value)).origin;
+      } catch {
+        return String(value).replace(/\/$/, "");
+      }
+    });
+
+  return allowedOrigins.includes(origin);
 }
 
 /**

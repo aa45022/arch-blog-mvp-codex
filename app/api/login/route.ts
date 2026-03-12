@@ -19,7 +19,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "請輸入帳號和密碼" }, { status: 400 });
     }
 
-    const user = await prisma.adminUser.findUnique({ where: { email } });
+    const normalizedEmail = String(email).trim().toLowerCase();
+    const user = await prisma.adminUser.findUnique({ where: { email: normalizedEmail } });
     if (!user) {
       return NextResponse.json({ error: "帳號或密碼錯誤" }, { status: 401 });
     }
@@ -51,7 +52,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ data: { email: user.email } });
-  } catch {
-    return NextResponse.json({ error: "登入時發生錯誤" }, { status: 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "登入時發生錯誤";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

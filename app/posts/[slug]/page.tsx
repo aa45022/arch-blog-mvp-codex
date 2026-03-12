@@ -156,6 +156,31 @@ export default async function PostPage({
     keywords: post.tags.map((t) => t.name).join(", "),
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "首頁",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: post.category.name,
+        item: `${SITE_URL}/?category=${post.category.slug}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: `${SITE_URL}/posts/${slug}`,
+      },
+    ],
+  };
+
   return (
     <>
       <ReadingProgress />
@@ -165,6 +190,10 @@ export default async function PostPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
 
       <main className="flex-1 page-enter">
@@ -243,7 +272,7 @@ export default async function PostPage({
               )}
               <div className="flex items-center justify-between">
                 <ShareButtons
-                  url={`${SITE_URL}/posts/${slug}`}
+                  url={`${SITE_URL}/read/${slug}`}
                   title={post.title}
                 />
                 <BookmarkButton
