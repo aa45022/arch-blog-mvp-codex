@@ -8,8 +8,9 @@ import { PrismaClient } from "./generated/prisma/client.js";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import bcrypt from "bcrypt";
+import { getDatabaseUrl } from "../lib/db-url.js";
 
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new pg.Pool({ connectionString: getDatabaseUrl() });
 const adapter = new PrismaPg(pool as unknown as ConstructorParameters<typeof PrismaPg>[0]);
 const prisma = new PrismaClient({ adapter });
 
